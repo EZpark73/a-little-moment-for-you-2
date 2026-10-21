@@ -77,13 +77,11 @@ const cards = [
   },
 ];
 
-// Preload รูปภาพการ์ดมารอไว้
 cards.forEach((card) => {
   const img = new Image();
   img.src = card.image;
 });
 
-// Decorative starfield
 if (starfield) {
   for (let i = 0; i < 72; i++) {
     const star = document.createElement("span");
@@ -144,7 +142,6 @@ function showPage(name) {
   }
 }
 
-// Navigation
 document.querySelectorAll("[data-go]").forEach((button) => {
   button.addEventListener("click", (event) => {
     event.preventDefault();
@@ -152,7 +149,6 @@ document.querySelectorAll("[data-go]").forEach((button) => {
   });
 });
 
-// Envelope
 if (envelopeButton) {
   envelopeButton.addEventListener("click", () => {
     const isOpen = envelopeButton.classList.toggle("open");
@@ -176,7 +172,6 @@ if (letterNext) {
   letterNext.addEventListener("click", () => showPage("luck"));
 }
 
-// Draw card
 if (drawCardButton) {
   drawCardButton.addEventListener("click", () => {
     let nextCard;
@@ -245,7 +240,6 @@ function loadCardImage(src) {
   });
 }
 
-// Save Card as Image (ดาวน์โหลดไฟล์ตรงทันที)
 if (saveCardButton) {
   saveCardButton.addEventListener("click", async () => {
     if (!currentCard) return;
@@ -385,17 +379,34 @@ if (saveCardButton) {
       ctx.fillText("♡", 652, 930);
       disableDarkShadow();
 
-      // บังคับดาวน์โหลดรูปภาพโดยตรงลงเครื่อง
-      const dataUrl = canvas.toDataURL("image/png");
-      const link = document.createElement("a");
-      link.download = `a-little-moment-${currentCard.number.toLowerCase().replace(/[^a-z0-9]+/g, "-")}.png`;
-      link.href = dataUrl;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          showToast("Could not generate image. ♡");
+          return;
+        }
 
-      showToast("Your little keepsake is saved. ♡");
-      saveNote.textContent = "Saved! Keep this little moment close. ♡";
+        const fileName = `a-little-moment-${currentCard.number.toLowerCase().replace(/[^a-z0-9]+/g, "-")}.png`;
+        const blobUrl = URL.createObjectURL(blob);
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+        if (isMobile) {
+          const newTab = window.open();
+          if (newTab) {
+            newTab.document.write(
+              `<body style="margin:0; background:#0c1434; display:flex; justify-content:center; align-items:center; min-height:100vh;">
+                <img src="${blobUrl}" style="max-width:100%; height:auto; border-radius:20px; box-shadow:0 10px 30px rgba(0,0,0,0.5);" />
+              </body>`,
+            );
+            showToast("แตะค้างที่รูปเพื่อบันทึกได้เลย ♡");
+            saveNote.textContent =
+              "แตะค้างที่รูปในแท็บใหม่เพื่อบันทึกลงเครื่องได้เลยครับ ♡";
+          } else {
+            triggerDownload(blobUrl, fileName);
+          }
+        } else {
+          triggerDownload(blobUrl, fileName);
+        }
+      }, "image/png");
     } catch (error) {
       console.error("Could not save card:", error);
       showToast("Could not save the card. Please try again. ♡");
@@ -403,6 +414,19 @@ if (saveCardButton) {
       saveCardButton.disabled = !currentCard;
     }
   });
+}
+
+function triggerDownload(url, filename) {
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  setTimeout(() => URL.revokeObjectURL(url), 10000);
+
+  showToast("Your little keepsake is saved. ♡");
+  saveNote.textContent = "Saved! Keep this little moment close. ♡";
 }
 
 function roundedRect(ctx, x, y, w, h, r) {
@@ -454,7 +478,6 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
   }
 }
 
-// Firestore Realtime Wishes
 if (wishesWall) {
   db.collection("wishes")
     .orderBy("createdAt", "desc")

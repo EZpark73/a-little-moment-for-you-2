@@ -1,6 +1,6 @@
 /* ========================================
    A Little Moment for You
-   Main stylesheet (Original restored + Clean Auto Scale)
+   Main stylesheet
    ======================================== */
 
 :root {
@@ -847,7 +847,7 @@ h1 {
   color: #f8faff;
   font:
     400 16px/1.8 "DM Sans",
-    /* 16px ป้องกัน iOS ซูม */ "Noto Sans Thai",
+    "Noto Sans Thai",
     sans-serif;
   padding: 13px 14px;
   outline: none;
@@ -1045,9 +1045,10 @@ h1 {
 }
 
 /* ========================================================
-   CLEAN RESPONSIVE ADJUSTMENT (ย่อสัดส่วนอัตโนมัติบนมือถือ)
+   RESPONSIVE ADJUSTMENTS (FIX MOBILE SPACING & LAYOUT)
    ======================================================== */
-@media (max-width: 650px) {
+
+@media (max-width: 600px) {
   .page-shell {
     padding: 0 16px;
   }
@@ -1060,6 +1061,43 @@ h1 {
     gap: 4px;
   }
 
+  .hero {
+    padding-top: 24px;
+  }
+
+  .letter-section,
+  .card-section,
+  .wish-section {
+    padding-top: 24px;
+  }
+
+  .page-view {
+    min-height: auto;
+    padding-bottom: 20px;
+  }
+
+  .card-stage {
+    margin: 16px auto;
+    height: 350px;
+  }
+
+  .fortune-card,
+  .empty-card {
+    width: 240px;
+    height: 340px;
+  }
+
+  .card-actions {
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 12px;
+    width: 100%;
+  }
+
+  .card-actions button {
+    width: 100%;
+  }
+
   .wishes-wall {
     grid-template-columns: 1fr;
   }
@@ -1067,18 +1105,14 @@ h1 {
   .page-bottom-nav {
     flex-direction: column-reverse;
     gap: 10px;
+    margin-top: 24px;
   }
 
   .page-bottom-nav button {
     width: 100%;
   }
 
-  .card-actions {
-    flex-direction: column;
-    width: 100%;
-  }
-
-  .card-actions button {
-    width: 100%;
+  .site-footer {
+    padding: 30px 0 20px;
   }
 }
