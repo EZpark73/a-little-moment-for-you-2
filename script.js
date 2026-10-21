@@ -364,6 +364,18 @@
     return text.includes(" ") ? text.split(/(?<= )/) : Array.from(text);
   }
 
+  // Draws one line centered on `cx`. Some mobile browsers mis-handle
+  // textAlign="center" for Thai text (the line starts at the center instead),
+  // so the position is computed manually from the measured width.
+  function fillCentered(ctx, text, cx, y) {
+    const previousAlign = ctx.textAlign;
+    ctx.textAlign = "left";
+    const width = ctx.measureText(text).width;
+    ctx.fillText(text, cx - width / 2, y);
+    ctx.textAlign = previousAlign;
+  }
+
+  // Wraps and draws text centered on `x`
   function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
     const pieces = segmentText(text);
     let line = "";
@@ -372,7 +384,7 @@
     pieces.forEach((piece) => {
       const test = line + piece;
       if (ctx.measureText(test.trimEnd()).width > maxWidth && line.trim()) {
-        ctx.fillText(line.trimEnd(), x, y + lineIndex * lineHeight);
+        fillCentered(ctx, line.trimEnd(), x, y + lineIndex * lineHeight);
         line = piece.trimStart();
         lineIndex++;
       } else {
@@ -381,7 +393,7 @@
     });
 
     if (line.trim()) {
-      ctx.fillText(line.trimEnd(), x, y + lineIndex * lineHeight);
+      fillCentered(ctx, line.trimEnd(), x, y + lineIndex * lineHeight);
     }
   }
 
