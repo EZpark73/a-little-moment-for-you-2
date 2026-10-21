@@ -77,7 +77,7 @@ const cards = [
   },
 ];
 
-// Preload รูปภาพการ์ดทั้งหมดล่วงหน้า ป้องกันรูปโหลดหน่วงเวลาเสี่ยงทาย
+// Preload รูปภาพการ์ดมารอไว้
 cards.forEach((card) => {
   const img = new Image();
   img.src = card.image;
@@ -100,10 +100,8 @@ if (starfield) {
 
 function showToast(message) {
   if (!toast) return;
-
   toast.textContent = message;
   toast.classList.add("show");
-
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => {
     toast.classList.remove("show");
@@ -112,18 +110,15 @@ function showToast(message) {
 
 function sparkleBurst(x, y, amount = 18) {
   const symbols = ["✦", "✧", "·", "♡", "⋆"];
-
   for (let i = 0; i < amount; i++) {
     const sparkle = document.createElement("span");
     sparkle.className = "wish-spark";
     sparkle.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-
     sparkle.style.left = `${x}px`;
     sparkle.style.top = `${y}px`;
     sparkle.style.fontSize = `${9 + Math.random() * 15}px`;
     sparkle.style.setProperty("--dx", `${(Math.random() - 0.5) * 250}px`);
     sparkle.style.setProperty("--dy", `${-50 + Math.random() * 190}px`);
-
     document.body.appendChild(sparkle);
     sparkle.addEventListener("animationend", () => sparkle.remove(), {
       once: true,
@@ -149,7 +144,7 @@ function showPage(name) {
   }
 }
 
-// Page navigation
+// Navigation
 document.querySelectorAll("[data-go]").forEach((button) => {
   button.addEventListener("click", (event) => {
     event.preventDefault();
@@ -157,11 +152,10 @@ document.querySelectorAll("[data-go]").forEach((button) => {
   });
 });
 
-// Open and close the letter
+// Envelope
 if (envelopeButton) {
   envelopeButton.addEventListener("click", () => {
     const isOpen = envelopeButton.classList.toggle("open");
-
     envelopeButton.setAttribute("aria-expanded", String(isOpen));
     paperNote.hidden = !isOpen;
     paperLines.hidden = isOpen;
@@ -182,11 +176,10 @@ if (letterNext) {
   letterNext.addEventListener("click", () => showPage("luck"));
 }
 
-// Draw a random fortune card
+// Draw card
 if (drawCardButton) {
   drawCardButton.addEventListener("click", () => {
     let nextCard;
-
     do {
       nextCard = cards[Math.floor(Math.random() * cards.length)];
     } while (
@@ -237,27 +230,22 @@ function escapeHtml(value) {
   return value.replace(
     /[&<>"']/g,
     (char) =>
-      ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;",
-      })[char],
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[
+        char
+      ],
   );
 }
 
 function loadCardImage(src) {
   return new Promise((resolve) => {
     const image = new Image();
-
     image.onload = () => resolve(image);
     image.onerror = () => resolve(null);
     image.src = src;
   });
 }
 
-// Save the current card as a PNG (รองรับทั้ง Mobile Safari/In-App Browser และ Desktop)
+// Save Card as Image (ดาวน์โหลดไฟล์ตรงทันที)
 if (saveCardButton) {
   saveCardButton.addEventListener("click", async () => {
     if (!currentCard) return;
@@ -269,10 +257,6 @@ if (saveCardButton) {
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
 
-      if (!ctx) {
-        throw new Error("Canvas is not supported in this browser.");
-      }
-
       const scale = 2;
       const width = 700;
       const height = 980;
@@ -283,7 +267,6 @@ if (saveCardButton) {
 
       const [c1, c2, c3] = currentCard.color;
 
-      // 1. Base pastel gradient background
       const gradient = ctx.createLinearGradient(0, 0, width, height);
       gradient.addColorStop(0, c1);
       gradient.addColorStop(0.55, c2);
@@ -293,14 +276,10 @@ if (saveCardButton) {
       roundedRect(ctx, 0, 0, width, height, 100);
       ctx.fill();
 
-      // 2. Clear background photo
       const photo = await loadCardImage(currentCard.image);
-
-      if (!currentCard) return;
 
       if (photo) {
         ctx.save();
-
         roundedRect(ctx, 0, 0, width, height, 100);
         ctx.clip();
 
@@ -323,7 +302,6 @@ if (saveCardButton) {
         ctx.drawImage(photo, drawX, drawY, drawWidth, drawHeight);
         ctx.globalAlpha = 1;
 
-        // Dark contrast overlay for crisp white text
         const overlay = ctx.createLinearGradient(0, 0, width, height);
         overlay.addColorStop(0, "rgba(12, 20, 52, 0.35)");
         overlay.addColorStop(0.5, "rgba(12, 20, 52, 0.25)");
@@ -331,17 +309,14 @@ if (saveCardButton) {
 
         ctx.fillStyle = overlay;
         ctx.fillRect(0, 0, width, height);
-
         ctx.restore();
       }
 
-      // 3. Card Inner Border
       ctx.strokeStyle = "rgba(255, 255, 255, 0.6)";
       ctx.lineWidth = 3;
       roundedRect(ctx, 19, 19, 662, 942, 80);
       ctx.stroke();
 
-      // 4. Decorative stars
       ctx.fillStyle = "rgba(255, 255, 255, 0.75)";
       [
         [90, 130],
@@ -356,7 +331,6 @@ if (saveCardButton) {
         drawStar(ctx, x, y, i % 2 ? 8 : 11);
       });
 
-      // Dark text shadow helper function
       const enableDarkShadow = () => {
         ctx.shadowColor = "rgba(0, 0, 0, 0.8)";
         ctx.shadowBlur = 10;
@@ -368,7 +342,6 @@ if (saveCardButton) {
         ctx.shadowOffsetY = 0;
       };
 
-      // 5. Header
       enableDarkShadow();
       ctx.textAlign = "left";
       ctx.fillStyle = "#ffffff";
@@ -379,32 +352,22 @@ if (saveCardButton) {
       ctx.font = "bold 16px sans-serif";
       ctx.fillText(currentCard.number, 652, 58);
 
-      // 6. Icon
       ctx.textAlign = "center";
-      ctx.fillStyle = "#ffffff";
       ctx.font = "100px Georgia, serif";
       ctx.fillText(currentCard.icon, 350, 330);
 
-      // 7. Label
-      ctx.fillStyle = "#ffffff";
       ctx.font = "bold 19px sans-serif";
       ctx.fillText(currentCard.label, 350, 405);
 
-      // 8. Title
-      ctx.fillStyle = "#ffffff";
       ctx.font = "bold 48px Georgia, serif";
-
       currentCard.title.split("\n").forEach((line, i) => {
         ctx.fillText(line, 350, 485 + i * 57);
       });
 
-      // 9. Message
-      ctx.fillStyle = "#ffffff";
       ctx.font = "600 22px sans-serif";
       wrapText(ctx, currentCard.message, 350, 635, 520, 35);
       disableDarkShadow();
 
-      // 10. Footer Line & Text
       ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
       ctx.lineWidth = 2;
       ctx.beginPath();
@@ -414,7 +377,6 @@ if (saveCardButton) {
 
       enableDarkShadow();
       ctx.textAlign = "left";
-      ctx.fillStyle = "#ffffff";
       ctx.font = "bold 17px sans-serif";
       ctx.fillText("DEW ✦ TEE", 48, 927);
 
@@ -423,35 +385,20 @@ if (saveCardButton) {
       ctx.fillText("♡", 652, 930);
       disableDarkShadow();
 
-      // ดาวน์โหลดรูปภาพที่รองรับทั้ง Mobile Safari, iOS และ Desktop
-      canvas.toBlob((blob) => {
-        if (!blob) {
-          showToast("Could not generate image blob. ♡");
-          return;
-        }
-        const fileUrl = URL.createObjectURL(blob);
-        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      // บังคับดาวน์โหลดรูปภาพโดยตรงลงเครื่อง
+      const dataUrl = canvas.toDataURL("image/png");
+      const link = document.createElement("a");
+      link.download = `a-little-moment-${currentCard.number.toLowerCase().replace(/[^a-z0-9]+/g, "-")}.png`;
+      link.href = dataUrl;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
 
-        if (isMobile) {
-          // บนมือถือ เปิดรูปในแท็บใหม่เพื่อให้แตะค้างบันทึกลงคลังภาพ
-          window.open(fileUrl, "_blank");
-          showToast("Opened image! Press & hold to save to Photos. ♡");
-          saveNote.textContent =
-            "Tap & hold the opened image to save to Photos! ♡";
-        } else {
-          // บนคอมพิวเตอร์ ดาวน์โหลดไฟล์โดยอัตโนมัติ
-          const link = document.createElement("a");
-          link.download = `a-little-moment-${currentCard.number.toLowerCase().replace(/[^a-z0-9]+/g, "-")}.png`;
-          link.href = fileUrl;
-          link.click();
-          showToast("Your little keepsake is saved. ♡");
-          saveNote.textContent = "Saved! Keep this little moment close. ♡";
-        }
-      }, "image/png");
+      showToast("Your little keepsake is saved. ♡");
+      saveNote.textContent = "Saved! Keep this little moment close. ♡";
     } catch (error) {
       console.error("Could not save card:", error);
       showToast("Could not save the card. Please try again. ♡");
-      saveNote.textContent = "Please try saving your card again. ♡";
     } finally {
       saveCardButton.disabled = !currentCard;
     }
@@ -470,20 +417,14 @@ function roundedRect(ctx, x, y, w, h, r) {
 
 function drawStar(ctx, x, y, radius) {
   ctx.beginPath();
-
   for (let i = 0; i < 10; i++) {
     const angle = -Math.PI / 2 + (i * Math.PI) / 5;
     const r = i % 2 === 0 ? radius : radius * 0.42;
     const px = x + Math.cos(angle) * r;
     const py = y + Math.sin(angle) * r;
-
-    if (i === 0) {
-      ctx.moveTo(px, py);
-    } else {
-      ctx.lineTo(px, py);
-    }
+    if (i === 0) ctx.moveTo(px, py);
+    else ctx.lineTo(px, py);
   }
-
   ctx.closePath();
   ctx.fill();
 }
@@ -491,7 +432,6 @@ function drawStar(ctx, x, y, radius) {
 function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
   const hasSpaces = text.includes(" ");
   const words = hasSpaces ? text.split(" ") : Array.from(text);
-
   let line = "";
   let lineIndex = 0;
 
@@ -501,7 +441,6 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
         ? `${line} ${word}`
         : word
       : `${line}${word}`;
-
     if (ctx.measureText(test).width > maxWidth && line) {
       ctx.fillText(line, x, y + lineIndex * lineHeight);
       line = word;
@@ -510,17 +449,12 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
       line = test;
     }
   }
-
   if (line) {
     ctx.fillText(line, x, y + lineIndex * lineHeight);
   }
 }
 
-// ==========================================
-// FIREBASE FIRESTORE REALTIME WISHES
-// ==========================================
-
-// 1. ดึงข้อความมาแสดงบน Wishes Wall แบบ Realtime
+// Firestore Realtime Wishes
 if (wishesWall) {
   db.collection("wishes")
     .orderBy("createdAt", "desc")
@@ -572,19 +506,16 @@ if (wishesWall) {
       },
       (error) => {
         console.error("Error fetching wishes: ", error);
-        showToast("Could not load wishes. Please refresh. ♡");
       },
     );
 }
 
-// Character counter
 if (wishMessage) {
   wishMessage.addEventListener("input", () => {
     characterCount.textContent = `${wishMessage.value.length} / 500`;
   });
 }
 
-// 2. บันทึกข้อความลง Firestore
 if (wishForm) {
   wishForm.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -628,5 +559,4 @@ if (wishForm) {
   });
 }
 
-// Initial page
 showPage("letter");

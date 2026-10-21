@@ -1,5 +1,6 @@
 /* ========================================
-   A Little Moment for You - Main Stylesheet
+   A Little Moment for You
+   Main stylesheet (Original restored + Clean Auto Scale)
    ======================================== */
 
 :root {
@@ -14,18 +15,8 @@
   --line: rgba(204, 218, 255, 0.18);
 }
 
-*,
-*::before,
-*::after {
+* {
   box-sizing: border-box;
-}
-
-html,
-body {
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden; /* ป้องกันพื้นที่ว่างล้นขวาบนมือถือ */
 }
 
 html {
@@ -33,6 +24,7 @@ html {
 }
 
 body {
+  margin: 0;
   min-height: 100vh;
   background: radial-gradient(
     ellipse at 50% 5%,
@@ -42,6 +34,7 @@ body {
   );
   color: var(--white);
   font-family: "DM Sans", "Noto Sans Thai", sans-serif;
+  overflow-x: hidden;
   position: relative;
 }
 
@@ -53,7 +46,6 @@ button {
   display: none !important;
 }
 
-/* Background Stars and Glows */
 .sky-glow {
   position: absolute;
   pointer-events: none;
@@ -63,27 +55,27 @@ button {
 }
 
 .glow-one {
-  width: 300px;
-  height: 300px;
+  width: 360px;
+  height: 360px;
   background: radial-gradient(
     circle,
     rgba(109, 145, 255, 0.2),
     transparent 70%
   );
-  top: 100px;
-  left: -100px;
+  top: 220px;
+  left: -180px;
 }
 
 .glow-two {
-  width: 300px;
-  height: 300px;
+  width: 420px;
+  height: 420px;
   background: radial-gradient(
     circle,
     rgba(207, 177, 255, 0.14),
     transparent 70%
   );
-  top: 800px;
-  right: -100px;
+  top: 950px;
+  right: -240px;
 }
 
 .starfield {
@@ -105,28 +97,23 @@ button {
   color: #f3d9f0;
 }
 
-/* Main Layout & Header */
 .page-shell {
   position: relative;
   z-index: 1;
-  width: 100%;
-  max-width: 800px;
+  max-width: 1000px;
   margin: 0 auto;
-  padding: 0 16px;
+  padding: 0 30px;
 }
 
 .site-header {
-  min-height: 60px;
-  padding: 12px 0;
+  height: 76px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid var(--line);
   font-size: 10px;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.17em;
   color: #d5def8;
-  flex-wrap: wrap;
-  gap: 8px;
 }
 
 .wordmark {
@@ -147,16 +134,15 @@ button {
   font-size: 11px;
 }
 
-/* Hero Section */
 .hero {
   text-align: center;
-  padding-top: 32px;
+  padding-top: 66px;
 }
 
 .eyebrow,
 .section-kicker {
   font-size: 10px;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.22em;
   color: #b9c9fa;
   font-weight: 600;
 }
@@ -165,68 +151,70 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 13px;
 }
 
 .eyebrow-line {
-  width: 20px;
+  width: 25px;
   height: 1px;
   background: #aebfff;
   opacity: 0.65;
 }
 
 h1 {
-  font-size: clamp(32px, 8vw, 64px);
-  line-height: 1.1;
-  letter-spacing: -0.04em;
+  font-size: clamp(48px, 8vw, 83px);
+  line-height: 0.99;
+  letter-spacing: -0.065em;
   font-weight: 500;
-  margin: 16px 0 12px;
-  word-break: break-word;
+  margin: 25px 0 18px;
 }
 
 .hero h1 em {
   font-family: Georgia, serif;
   font-weight: 400;
   color: #c7d6ff;
+  letter-spacing: -0.055em;
 }
 
 .title-sparkle {
   font-size: 0.38em;
   color: #f0d7f0;
   vertical-align: top;
-  margin-left: 6px;
+  margin-left: 10px;
 }
 
 .hero-copy {
   font-size: 13px;
-  line-height: 1.7;
+  line-height: 1.9;
   color: #bdc8e7;
-  margin: 0;
-  padding: 0 8px;
-}
-
-.hero h2 {
-  font-family: Georgia, "Noto Sans Thai", serif;
-  font-size: clamp(22px, 5vw, 30px);
-  font-weight: 400;
-  letter-spacing: -0.02em;
-  margin: 12px 0 8px;
-}
-
-.section-copy {
-  font-size: 12px;
-  color: #aebada;
-  line-height: 1.7;
   margin: 0;
 }
 
 .letter-section,
 .card-section,
 .wish-section {
-  padding-top: 40px;
+  padding-top: 73px;
 }
 
-/* Envelope and Letter */
+.section-kicker {
+  color: #aebff2;
+}
+
+.hero h2 {
+  font-family: Georgia, "Noto Sans Thai", serif;
+  font-size: clamp(24px, 4vw, 32px);
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  margin: 14px 0 10px;
+}
+
+.section-copy {
+  font-size: 12px;
+  color: #aebada;
+  line-height: 1.8;
+  margin: 0;
+}
+
 .envelope-button {
   border: 0;
   background: none;
@@ -235,16 +223,15 @@ h1 {
   flex-direction: column;
   align-items: center;
   cursor: pointer;
-  margin: 20px auto 0;
-  padding: 0;
-  width: 100%;
-  max-width: 280px;
+  margin: 28px auto 0;
+  padding: 0 12px 8px;
+  width: min(100%, 340px);
   -webkit-tap-highlight-color: transparent;
 }
 
 .envelope-halo {
-  width: 200px;
-  height: 120px;
+  width: 250px;
+  height: 145px;
   position: absolute;
   transform: translateY(15px);
   background: radial-gradient(
@@ -258,10 +245,11 @@ h1 {
 .envelope {
   position: relative;
   display: block;
-  width: 220px;
-  height: 145px;
+  width: 230px;
+  height: 152px;
   perspective: 700px;
-  filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.3));
+  overflow: visible;
+  filter: drop-shadow(0 18px 25px rgba(0, 0, 0, 0.2));
   transition: transform 0.35s;
 }
 
@@ -280,10 +268,10 @@ h1 {
 .letter-paper {
   position: absolute;
   z-index: 2;
-  left: 14px;
-  right: 14px;
+  left: 18px;
+  right: 18px;
   top: 8px;
-  height: 120px;
+  height: 125px;
   padding: 0;
   background: linear-gradient(140deg, #fff, #e6eaff);
   border-radius: 3px;
@@ -292,27 +280,27 @@ h1 {
   justify-content: center;
   flex-direction: column;
   overflow: hidden;
-  box-shadow: 0 2px 9px rgba(52, 72, 121, 0.15);
+  box-shadow: 0 2px 9px #34487925;
   transition:
-    transform 0.6s cubic-bezier(0.2, 0.75, 0.2, 1),
-    top 0.6s,
-    height 0.6s ease,
+    transform 0.8s cubic-bezier(0.2, 0.75, 0.2, 1),
+    top 0.8s,
+    height 0.65s ease,
     padding 0.4s;
 }
 
 .letter-paper-star {
   color: #778bd0;
-  font-size: 22px;
+  font-size: 25px;
 }
 
 .letter-paper-lines {
-  width: 50px;
+  width: 54px;
   height: 1px;
   background: #a7b7e8;
-  margin-top: 10px;
+  margin-top: 12px;
   box-shadow:
-    0 5px #c5d0f1,
-    0 10px #c5d0f1;
+    0 6px #c5d0f1,
+    0 12px #c5d0f1;
 }
 
 .envelope-front-left,
@@ -346,7 +334,7 @@ h1 {
   background: linear-gradient(180deg, #eaf0ff, #c4d2fa);
   clip-path: polygon(0 0, 100% 0, 50% 58%);
   transform-origin: top;
-  transition: transform 0.5s ease;
+  transition: transform 0.55s ease;
   backface-visibility: hidden;
 }
 
@@ -358,37 +346,41 @@ h1 {
 .seal {
   position: absolute;
   z-index: 4;
-  left: calc(50% - 16px);
-  top: calc(53% - 16px);
-  width: 32px;
-  height: 32px;
+  left: calc(50% - 17px);
+  top: calc(53% - 17px);
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   background: linear-gradient(145deg, #f4d9ef, #dbaedb);
   color: #6d528d;
   display: grid;
   place-items: center;
-  font-size: 16px;
-  box-shadow: 0 3px 10px rgba(41, 54, 101, 0.3);
+  font-size: 19px;
+  box-shadow: 0 3px 10px #29366555;
+  transition: opacity 0.2s;
 }
 
 .envelope-hint {
-  margin-top: 16px;
-  font-size: 10px;
-  letter-spacing: 0.15em;
+  position: relative;
+  z-index: 5;
+  margin-top: 19px;
+  font-size: 9px;
+  letter-spacing: 0.2em;
   color: #d6e0ff;
 }
 
 .envelope-hint span {
   color: #eecfea;
-  margin-left: 4px;
+  margin-left: 6px;
 }
 
 .envelope-button.open .letter-paper {
-  height: 280px;
-  top: -10px;
-  transform: translateY(-80px);
+  height: 310px;
+  top: -8px;
+  transform: translateY(-88px);
   z-index: 5;
-  padding: 10px;
+  overflow: hidden;
+  padding: 12px;
   justify-content: flex-start;
 }
 
@@ -401,28 +393,44 @@ h1 {
   display: none;
 }
 
+.envelope-button.open .envelope {
+  margin-bottom: 90px;
+}
+
+.envelope-button.open .envelope-hint {
+  margin-top: 0;
+}
+
+.paper-note {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: 100%;
+  min-height: 0;
+  color: #2b3b67;
+  animation: fadeUp 0.45s both;
+}
+
 .paper-note:not([hidden]) {
   position: absolute;
   inset: 0;
   z-index: 2;
   box-sizing: border-box;
-  padding: 16px 10px;
+  padding: 20px 14px;
   text-align: center;
   background: radial-gradient(
     ellipse at top,
-    rgba(255, 255, 255, 0.9),
-    #e2e8f8
+    rgba(255, 255, 255, 0.7),
+    transparent 65%
   );
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 6px;
 }
 
 .paper-note:not([hidden])::before {
   content: "";
   position: absolute;
-  inset: 6px;
+  inset: 8px;
   border: 1px solid rgba(91, 111, 163, 0.35);
   border-radius: 4px;
   pointer-events: none;
@@ -431,41 +439,67 @@ h1 {
 .paper-note:not([hidden])::after {
   content: "✧  ♡  ✧";
   position: absolute;
-  bottom: 5px;
+  bottom: 7px;
   left: 0;
   right: 0;
   color: #8294c5;
-  font-size: 9px;
-  letter-spacing: 3px;
+  font-size: 10px;
+  letter-spacing: 4px;
   pointer-events: none;
+}
+
+.paper-note .message-topline,
+.paper-note .paper-message,
+.paper-note .paper-english,
+.paper-note .paper-signature {
+  position: relative;
+  z-index: 1;
+  max-width: 100%;
+  margin: 0;
+  text-align: center;
+  overflow-wrap: anywhere;
 }
 
 .paper-note .message-topline {
   color: #6478a8;
   font-size: 7px;
   letter-spacing: 0.12em;
+  line-height: 1.5;
 }
 
 .paper-message {
   font-family: "Noto Sans Thai", sans-serif;
   font-size: 10px;
-  line-height: 1.6;
+  line-height: 1.8;
+  text-align: center;
   color: #2b3b67;
-  margin: 0;
+}
+
+.paper-note .paper-message {
+  color: #303d63;
 }
 
 .paper-english {
   font-family: Georgia, serif;
   font-size: 9px;
+  line-height: 1.5;
   font-style: italic;
   color: #6576a7;
-  margin: 0;
+  text-align: center;
+}
+
+.paper-note .paper-english {
+  color: #7783a5;
 }
 
 .paper-signature {
   font-size: 8px;
+  color: #6576a7;
+  margin-top: 2px;
+}
+
+.paper-note .paper-signature {
   color: #65749d;
-  margin: 0;
 }
 
 .paper-signature strong {
@@ -473,81 +507,85 @@ h1 {
   font-weight: 600;
 }
 
-/* Fortune Card Section */
+.paper-note .paper-signature strong {
+  color: #435787;
+}
+
 .card-stage {
-  width: 100%;
-  max-width: 300px;
-  min-height: 420px;
-  margin: 20px auto 16px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  width: min(100%, 330px);
+  height: 385px;
+  margin: 29px auto 20px;
+  display: grid;
+  place-items: center;
+  position: relative;
 }
 
 .empty-card,
 .fortune-card {
-  width: 100%;
-  max-width: 280px;
-  height: 410px;
-  border-radius: 28px;
+  width: 260px;
+  height: 365px;
+  border-radius: 40px;
   position: relative;
   overflow: hidden;
-  box-sizing: border-box;
 }
 
 .empty-card {
-  border: 1px solid rgba(210, 224, 255, 0.4);
+  border: 1px solid rgba(210, 224, 255, 0.5);
   background: radial-gradient(
     ellipse at 50% 36%,
     #5268a4 0%,
     #26396f 45%,
     #17234c 100%
   );
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 20px;
-  box-shadow: inset 0 0 25px rgba(180, 201, 255, 0.1);
+  box-shadow:
+    0 20px 55px #050b20aa,
+    inset 0 0 35px #b4c9ff18;
 }
 
 .empty-card-orbit {
   position: absolute;
   border: 1px solid rgba(218, 228, 255, 0.2);
   border-radius: 50%;
-  width: 180px;
-  height: 180px;
+  width: 200px;
+  height: 200px;
+  left: 30px;
+  top: 67px;
 }
 
 .orbit-b {
-  width: 135px;
-  height: 135px;
+  width: 155px;
+  height: 155px;
+  left: 52px;
+  top: 90px;
   border-style: dashed;
   opacity: 0.6;
 }
 
 .empty-card-star {
-  font-size: 60px;
+  position: absolute;
+  top: 105px;
+  width: 100%;
+  font-size: 74px;
   color: #e6eaff;
-  text-shadow: 0 0 20px rgba(189, 207, 255, 0.6);
-  z-index: 1;
+  text-shadow: 0 0 24px #bdcfff99;
 }
 
 .empty-card-caption {
+  position: absolute;
+  top: 215px;
+  width: 100%;
   font-size: 10px;
-  letter-spacing: 0.2em;
-  line-height: 1.8;
+  letter-spacing: 0.23em;
+  line-height: 1.9;
   color: #e2e9ff;
-  margin-top: 15px;
-  z-index: 1;
 }
 
 .empty-card-bottom {
   position: absolute;
-  bottom: 20px;
+  bottom: 25px;
+  width: 100%;
   font-size: 10px;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.2em;
   color: #c4d2ff;
 }
 
@@ -556,8 +594,8 @@ h1 {
   padding: 8px;
   color: #ffffff;
   background: linear-gradient(155deg, #e9edff 0%, #b7c9f4 48%, #e6d8f0 100%);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
-  animation: cardReveal 0.6s cubic-bezier(0.18, 0.8, 0.2, 1) both;
+  box-shadow: 0 20px 55px #050b20aa;
+  animation: cardReveal 0.7s cubic-bezier(0.18, 0.8, 0.2, 1) both;
 }
 
 .fortune-card::before {
@@ -568,7 +606,8 @@ h1 {
   background-image: var(--card-photo);
   background-size: cover;
   background-position: center;
-  opacity: 0.8;
+  opacity: 0.75;
+  filter: saturate(1);
   pointer-events: none;
 }
 
@@ -580,22 +619,22 @@ h1 {
   background: linear-gradient(
     180deg,
     rgba(12, 20, 52, 0.35) 0%,
-    rgba(12, 20, 52, 0.2) 50%,
-    rgba(12, 20, 52, 0.45) 100%
+    rgba(12, 20, 52, 0.25) 50%,
+    rgba(12, 20, 52, 0.4) 100%
   );
   pointer-events: none;
 }
 
 .card-border {
   height: 100%;
-  border: 1.5px solid rgba(255, 255, 255, 0.65);
-  border-radius: 22px;
+  border: 1.5px solid rgba(255, 255, 255, 0.6);
+  border-radius: 32px;
   display: flex;
   align-items: center;
   flex-direction: column;
   position: relative;
   z-index: 1;
-  padding: 16px 12px;
+  padding: 24px 17px 18px;
 }
 
 .card-topline,
@@ -604,44 +643,48 @@ h1 {
   display: flex;
   justify-content: space-between;
   font-size: 8px;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   color: #ffffff;
   font-weight: 700;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
 }
 
 .card-moon {
-  font-size: 42px;
+  font-size: 58px;
   line-height: 1;
-  margin-top: 16px;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+  margin-top: 34px;
+  color: #ffffff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
 }
 
 .card-label {
   font-size: 8px;
   font-weight: 700;
-  letter-spacing: 0.2em;
-  margin-top: 10px;
-  text-shadow: 0 1px 5px rgba(0, 0, 0, 0.8);
+  letter-spacing: 0.22em;
+  margin-top: 20px;
+  color: #ffffff;
+  text-shadow: 0 1px 5px rgba(0, 0, 0, 0.7);
 }
 
 .fortune-card h3 {
   font-family: Georgia, serif;
-  font-size: 20px;
+  font-size: 25px;
   font-weight: 600;
-  line-height: 1.2;
-  margin: 10px 0 8px;
-  text-align: center;
+  line-height: 1.17;
+  letter-spacing: -0.04em;
+  margin: 13px 0 12px;
+  color: #ffffff;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
 }
 
 .fortune-card p {
   font-family: "Noto Sans Thai", sans-serif;
   font-size: 10px;
-  line-height: 1.7;
-  text-align: center;
+  font-weight: 500;
+  line-height: 1.9;
+  max-width: 180px;
   margin: 0;
-  padding: 0 8px;
+  color: #ffffff;
   text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
 }
 
@@ -649,41 +692,42 @@ h1 {
   margin-top: auto;
 }
 
-/* Actions & Buttons */
 .card-actions {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   gap: 10px;
-  width: 100%;
-  max-width: 280px;
-  margin: 0 auto;
+  flex-wrap: wrap;
 }
 
 .primary-button,
 .secondary-button,
 .wish-button {
-  width: 100%;
-  border-radius: 99px;
-  padding: 12px 16px;
+  border-radius: 999px;
+  padding: 13px 20px;
   font-size: 11px;
+  letter-spacing: 0.03em;
   cursor: pointer;
-  text-align: center;
   transition:
     transform 0.2s,
-    background 0.2s;
+    background 0.2s,
+    border-color 0.2s;
 }
 
 .primary-button {
   border: 1px solid #c6d5ff;
   background: linear-gradient(110deg, #e2e9ff, #c7d5fb);
   color: #1c2b56;
-  font-weight: 600;
-  box-shadow: 0 4px 15px rgba(5, 10, 29, 0.2);
+  box-shadow: 0 5px 20px #050a1d33;
+}
+
+.primary-button span,
+.secondary-button span {
+  margin-right: 7px;
 }
 
 .secondary-button {
   border: 1px solid rgba(199, 215, 255, 0.3);
-  background: rgba(218, 228, 255, 0.08);
+  background: rgba(218, 228, 255, 0.06);
   color: #e2e9ff;
 }
 
@@ -701,205 +745,263 @@ h1 {
 .save-note {
   font-size: 10px;
   color: #8797c0;
-  margin-top: 10px;
-  text-align: center;
+  margin-top: 15px;
 }
 
-/* Navigation Buttons */
+.page-view {
+  min-height: calc(100vh - 190px);
+  padding-bottom: 34px;
+  animation: fadeUp 0.45s both;
+}
+
+.page-view[hidden] {
+  display: none !important;
+}
+
+.page-view.active {
+  display: block;
+}
+
+.page-kicker {
+  margin-top: 50px;
+}
+
+.page-view:not(#page-letter) > h2 {
+  margin-top: 14px;
+}
+
+.letter-section {
+  padding-top: 54px;
+}
+
+.letter-controls {
+  display: flex;
+  justify-content: flex-end;
+  max-width: 470px;
+  margin: 14px auto 0;
+}
+
+.next-button {
+  min-width: 112px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.next-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 .page-bottom-nav {
   display: flex;
-  flex-direction: column-reverse;
-  gap: 10px;
-  width: 100%;
-  max-width: 280px;
-  margin: 24px auto 0;
-}
-
-.page-bottom-nav button {
-  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  width: min(100%, 600px);
+  margin: 46px auto 0;
 }
 
 .text-nav {
   border: 0;
   background: transparent;
   color: #bdcafa;
-  font-size: 11px;
+  font: inherit;
+  font-size: 12px;
   cursor: pointer;
-  padding: 8px 0;
-  text-align: center;
+  padding: 12px 0;
 }
 
-/* Wish Form & Wishes Wall */
 .wish-form {
-  width: 100%;
-  max-width: 450px;
-  margin: 20px auto 0;
-  padding: 16px;
+  width: min(100%, 540px);
+  margin: 32px auto 0;
+  text-align: left;
+  padding: 25px;
   border: 1px solid rgba(204, 218, 255, 0.2);
-  border-radius: 16px;
-  background: rgba(220, 230, 255, 0.05);
+  border-radius: 18px;
+  background: linear-gradient(
+    145deg,
+    rgba(220, 230, 255, 0.09),
+    rgba(220, 230, 255, 0.035)
+  );
+  box-shadow: 0 22px 60px rgba(3, 8, 27, 0.2);
 }
 
 .form-label {
   display: block;
   color: #dce5ff;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
-  margin-bottom: 8px;
+  letter-spacing: 0.025em;
+  margin: 0 0 10px;
 }
 
 .wish-form textarea,
 .wish-form input {
+  display: block;
   width: 100%;
   border: 1px solid rgba(195, 211, 255, 0.28);
-  border-radius: 10px;
-  background: rgba(7, 14, 42, 0.6);
+  border-radius: 11px;
+  background: rgba(7, 14, 42, 0.45);
   color: #f8faff;
-  font-size: 16px; /* 16px ป้องกัน iOS Zoom In */
-  padding: 10px 12px;
+  font:
+    400 16px/1.8 "DM Sans",
+    /* 16px ป้องกัน iOS ซูม */ "Noto Sans Thai",
+    sans-serif;
+  padding: 13px 14px;
   outline: none;
 }
 
 .wish-form textarea {
-  min-height: 100px;
   resize: vertical;
+  min-height: 135px;
 }
 
 .field-meta {
   display: flex;
   justify-content: space-between;
+  gap: 10px;
   font-size: 10px;
   color: #8494bd;
-  margin-top: 6px;
+  margin-top: 8px;
 }
 
 .from-label {
-  margin-top: 16px;
+  margin-top: 24px;
+}
+
+.wish-form .wish-button {
+  display: block;
+  margin: 26px auto 0;
+  min-width: 190px;
 }
 
 .wish-button {
+  margin-top: 24px;
   border: 1px solid rgba(218, 226, 255, 0.4);
-  background: rgba(214, 225, 255, 0.12);
+  background: rgba(214, 225, 255, 0.08);
   color: #e8edff;
-  margin-top: 16px;
+  padding: 14px 24px;
 }
 
 .wish-feedback {
   text-align: center;
+  min-height: 22px;
   font-size: 11px;
   color: #abbbe4;
-  margin-top: 12px;
+  margin: 17px 0 0;
+  line-height: 1.8;
 }
 
 .wishes-wall {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
-  width: 100%;
-  max-width: 500px;
-  margin: 20px auto 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  width: min(100%, 760px);
+  margin: 34px auto 0;
+  text-align: left;
 }
 
 .wish-card {
   position: relative;
-  padding: 16px;
+  min-height: 180px;
+  overflow: hidden;
+  padding: 22px 22px 20px;
   border: 1px solid rgba(204, 218, 255, 0.25);
-  border-radius: 12px;
+  border-radius: 14px;
   background: linear-gradient(
     145deg,
-    rgba(230, 237, 255, 0.1),
-    rgba(170, 193, 245, 0.05)
+    rgba(230, 237, 255, 0.12),
+    rgba(170, 193, 245, 0.055)
   );
+  box-shadow: 0 15px 38px rgba(3, 8, 27, 0.16);
+  animation: fadeUp 0.45s both;
 }
 
 .wish-card-to {
-  font-size: 10px;
+  font-size: 11px;
+  letter-spacing: 0.06em;
   color: #d8e2ff;
   font-weight: 700;
 }
 
 .wish-card-message {
   font-family: "Noto Sans Thai", sans-serif;
-  font-size: 12px;
-  line-height: 1.8;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 13px;
+  line-height: 1.95;
   color: #f2f5ff;
-  margin: 10px 0;
-  word-break: break-word;
+  margin: 16px 0 19px;
 }
 
 .wish-card-from {
-  font-size: 10px;
+  font-size: 11px;
   color: #c0cafa;
   text-align: right;
-  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .wish-card-star {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 17px;
+  right: 18px;
   color: #e5d4f5;
-  font-size: 12px;
+  font-size: 13px;
+  opacity: 0.8;
 }
 
 .wall-note {
   color: #96a7d3;
-  font-size: 10px;
-  margin-top: 16px;
-  text-align: center;
+  font-size: 11px;
+  margin-top: 22px;
 }
 
 .wall-empty {
   grid-column: 1 / -1;
-  padding: 30px 16px;
+  padding: 38px 20px;
   border: 1px dashed rgba(204, 218, 255, 0.25);
-  border-radius: 14px;
+  border-radius: 16px;
   color: #b8c7ef;
   text-align: center;
+  background: rgba(220, 230, 255, 0.035);
 }
 
-.wall-empty-star {
-  font-size: 24px;
-  color: #e5d4f5;
-}
-
-/* Footer & Notifications */
 .site-footer {
-  padding: 40px 0 24px;
-  text-align: center;
+  padding: 70px 0 36px;
   color: #9eadd4;
 }
 
 .footer-star {
-  font-size: 18px;
+  font-size: 22px;
   color: #e4d3f4;
-  margin-bottom: 8px;
+  margin-bottom: 14px;
 }
 
 .site-footer p {
   font-family: Georgia, "Noto Sans Thai", serif;
-  font-size: 14px;
+  font-size: 16px;
   color: #d6def6;
-  margin: 0;
+  margin: 0 0 15px;
 }
 
 .toast {
   position: fixed;
-  bottom: 20px;
+  bottom: 22px;
   left: 50%;
   transform: translate(-50%, 20px);
   opacity: 0;
   pointer-events: none;
-  z-index: 100;
-  padding: 10px 18px;
+  z-index: 10;
+  padding: 12px 17px;
   border-radius: 99px;
   background: #edf1ff;
   color: #1c2b56;
   font-size: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-  transition: all 0.3s ease;
-  width: max-content;
-  max-width: calc(100% - 32px);
+  box-shadow: 0 8px 30px #050a1d66;
+  transition: all 0.3s;
+  max-width: calc(100% - 30px);
   text-align: center;
 }
 
@@ -908,32 +1010,22 @@ h1 {
   transform: translate(-50%, 0);
 }
 
-.wish-spark {
-  position: fixed;
-  z-index: 8;
-  pointer-events: none;
-  color: #e8d8ff;
-  text-shadow: 0 0 12px #b4c8ff;
-  animation: shoot 1.6s ease-out forwards;
-}
-
-/* Animations */
 @keyframes twinkle {
   0%,
   100% {
-    opacity: 0.15;
+    opacity: 0.16;
     transform: scale(0.8);
   }
   50% {
     opacity: 0.8;
-    transform: scale(1.2);
+    transform: scale(1.25);
   }
 }
 
 @keyframes fadeUp {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
@@ -944,58 +1036,49 @@ h1 {
 @keyframes cardReveal {
   0% {
     opacity: 0;
-    transform: translateY(14px) scale(0.95);
+    transform: translateY(18px) rotateY(-12deg) scale(0.94);
   }
   100% {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateY(0) rotateY(0) scale(1);
   }
 }
 
-@keyframes shoot {
-  0% {
-    opacity: 0;
-    transform: translate(0, 0) scale(0.4);
-  }
-  15% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-    transform: translate(var(--dx), var(--dy)) scale(0);
-  }
-}
-
-/* Tablet & Desktop View */
-@media (min-width: 600px) {
+/* ========================================================
+   CLEAN RESPONSIVE ADJUSTMENT (ย่อสัดส่วนอัตโนมัติบนมือถือ)
+   ======================================================== */
+@media (max-width: 650px) {
   .page-shell {
-    padding: 0 24px;
+    padding: 0 16px;
   }
-  .wishes-wall {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .page-bottom-nav {
-    flex-direction: row;
-    max-width: 500px;
-  }
-  .card-actions {
-    flex-direction: row;
-    max-width: 400px;
-  }
-  .card-actions button {
-    width: auto;
-    flex: 1;
-  }
-}
 
-/* Reduced Motion Settings */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    scroll-behavior: auto !important;
-    transition-duration: 0.01ms !important;
+  .site-header {
+    flex-direction: column;
+    justify-content: center;
+    height: auto;
+    padding: 12px 0;
+    gap: 4px;
+  }
+
+  .wishes-wall {
+    grid-template-columns: 1fr;
+  }
+
+  .page-bottom-nav {
+    flex-direction: column-reverse;
+    gap: 10px;
+  }
+
+  .page-bottom-nav button {
+    width: 100%;
+  }
+
+  .card-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .card-actions button {
+    width: 100%;
   }
 }
