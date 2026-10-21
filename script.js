@@ -77,6 +77,12 @@ const cards = [
   },
 ];
 
+// Preload รูปภาพการ์ดทั้งหมดล่วงหน้า ป้องกันรูปโหลดหน่วงเวลาเสี่ยงทาย
+cards.forEach((card) => {
+  const img = new Image();
+  img.src = card.image;
+});
+
 // Decorative starfield
 if (starfield) {
   for (let i = 0; i < 72; i++) {
@@ -152,71 +158,80 @@ document.querySelectorAll("[data-go]").forEach((button) => {
 });
 
 // Open and close the letter
-envelopeButton.addEventListener("click", () => {
-  const isOpen = envelopeButton.classList.toggle("open");
+if (envelopeButton) {
+  envelopeButton.addEventListener("click", () => {
+    const isOpen = envelopeButton.classList.toggle("open");
 
-  envelopeButton.setAttribute("aria-expanded", String(isOpen));
-  paperNote.hidden = !isOpen;
-  paperLines.hidden = isOpen;
-  letterNext.disabled = !isOpen;
+    envelopeButton.setAttribute("aria-expanded", String(isOpen));
+    paperNote.hidden = !isOpen;
+    paperLines.hidden = isOpen;
+    letterNext.disabled = !isOpen;
 
-  envelopeHint.innerHTML = isOpen
-    ? "YOUR LETTER IS OPEN <span>♡</span>"
-    : "TAP TO OPEN <span>↗</span>";
+    envelopeHint.innerHTML = isOpen
+      ? "YOUR LETTER IS OPEN <span>♡</span>"
+      : "TAP TO OPEN <span>↗</span>";
 
-  if (isOpen) {
-    const rect = envelopeButton.getBoundingClientRect();
-    sparkleBurst(window.innerWidth / 2, rect.top + 65, 15);
-  }
-});
+    if (isOpen) {
+      const rect = envelopeButton.getBoundingClientRect();
+      sparkleBurst(window.innerWidth / 2, rect.top + 65, 15);
+    }
+  });
+}
 
-letterNext.addEventListener("click", () => showPage("luck"));
+if (letterNext) {
+  letterNext.addEventListener("click", () => showPage("luck"));
+}
 
 // Draw a random fortune card
-drawCardButton.addEventListener("click", () => {
-  let nextCard;
+if (drawCardButton) {
+  drawCardButton.addEventListener("click", () => {
+    let nextCard;
 
-  do {
-    nextCard = cards[Math.floor(Math.random() * cards.length)];
-  } while (
-    cards.length > 1 &&
-    currentCard &&
-    nextCard.number === currentCard.number
-  );
+    do {
+      nextCard = cards[Math.floor(Math.random() * cards.length)];
+    } while (
+      cards.length > 1 &&
+      currentCard &&
+      nextCard.number === currentCard.number
+    );
 
-  currentCard = nextCard;
+    currentCard = nextCard;
 
-  document.getElementById("cardNumber").textContent = currentCard.number;
-  document.getElementById("cardIcon").textContent = currentCard.icon;
-  document.getElementById("cardLabel").textContent = currentCard.label;
+    document.getElementById("cardNumber").textContent = currentCard.number;
+    document.getElementById("cardIcon").textContent = currentCard.icon;
+    document.getElementById("cardLabel").textContent = currentCard.label;
 
-  document.getElementById("cardTitle").innerHTML = currentCard.title
-    .split("\n")
-    .map(escapeHtml)
-    .join("<br>");
+    document.getElementById("cardTitle").innerHTML = currentCard.title
+      .split("\n")
+      .map(escapeHtml)
+      .join("<br>");
 
-  document.getElementById("cardMessage").textContent = currentCard.message;
+    document.getElementById("cardMessage").textContent = currentCard.message;
 
-  fortuneCard.style.background =
-    `linear-gradient(155deg, ${currentCard.color[0]} 0%, ` +
-    `${currentCard.color[1]} 48%, ${currentCard.color[2]} 100%)`;
+    fortuneCard.style.background =
+      `linear-gradient(155deg, ${currentCard.color[0]} 0%, ` +
+      `${currentCard.color[1]} 48%, ${currentCard.color[2]} 100%)`;
 
-  fortuneCard.style.setProperty("--card-photo", `url("${currentCard.image}")`);
+    fortuneCard.style.setProperty(
+      "--card-photo",
+      `url("${currentCard.image}")`,
+    );
 
-  emptyCard.hidden = true;
-  fortuneCard.hidden = false;
+    emptyCard.hidden = true;
+    fortuneCard.hidden = false;
 
-  fortuneCard.style.animation = "none";
-  void fortuneCard.offsetWidth;
-  fortuneCard.style.animation = "";
+    fortuneCard.style.animation = "none";
+    void fortuneCard.offsetWidth;
+    fortuneCard.style.animation = "";
 
-  saveCardButton.disabled = false;
-  saveNote.textContent =
-    "Your card is ready to keep. Save it as an image below. ♡";
+    saveCardButton.disabled = false;
+    saveNote.textContent =
+      "Your card is ready to keep. Save it as an image below. ♡";
 
-  const rect = fortuneCard.getBoundingClientRect();
-  sparkleBurst(rect.left + rect.width / 2, rect.top + rect.height / 2, 22);
-});
+    const rect = fortuneCard.getBoundingClientRect();
+    sparkleBurst(rect.left + rect.width / 2, rect.top + rect.height / 2, 22);
+  });
+}
 
 function escapeHtml(value) {
   return value.replace(
@@ -242,193 +257,206 @@ function loadCardImage(src) {
   });
 }
 
-// Save the current card as a PNG with white text matching the web UI
-saveCardButton.addEventListener("click", async () => {
-  if (!currentCard) return;
-
-  saveCardButton.disabled = true;
-  saveNote.textContent = "Preparing your little keepsake… ♡";
-
-  try {
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-
-    if (!ctx) {
-      throw new Error("Canvas is not supported in this browser.");
-    }
-
-    const scale = 2;
-    const width = 700;
-    const height = 980;
-
-    canvas.width = width * scale;
-    canvas.height = height * scale;
-    ctx.scale(scale, scale);
-
-    const [c1, c2, c3] = currentCard.color;
-
-    // 1. Base pastel gradient background
-    const gradient = ctx.createLinearGradient(0, 0, width, height);
-    gradient.addColorStop(0, c1);
-    gradient.addColorStop(0.55, c2);
-    gradient.addColorStop(1, c3);
-
-    ctx.fillStyle = gradient;
-    roundedRect(ctx, 0, 0, width, height, 100);
-    ctx.fill();
-
-    // 2. Clear background photo
-    const photo = await loadCardImage(currentCard.image);
-
+// Save the current card as a PNG (รองรับทั้ง Mobile Safari/In-App Browser และ Desktop)
+if (saveCardButton) {
+  saveCardButton.addEventListener("click", async () => {
     if (!currentCard) return;
 
-    if (photo) {
-      ctx.save();
+    saveCardButton.disabled = true;
+    saveNote.textContent = "Preparing your little keepsake… ♡";
 
-      roundedRect(ctx, 0, 0, width, height, 100);
-      ctx.clip();
+    try {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
 
-      const imageRatio = photo.width / photo.height;
-      const cardRatio = width / height;
-      let drawWidth, drawHeight;
-
-      if (imageRatio > cardRatio) {
-        drawHeight = height;
-        drawWidth = height * imageRatio;
-      } else {
-        drawWidth = width;
-        drawHeight = width / imageRatio;
+      if (!ctx) {
+        throw new Error("Canvas is not supported in this browser.");
       }
 
-      const drawX = (width - drawWidth) / 2;
-      const drawY = (height - drawHeight) / 2;
+      const scale = 2;
+      const width = 700;
+      const height = 980;
 
-      ctx.globalAlpha = 0.75;
-      ctx.drawImage(photo, drawX, drawY, drawWidth, drawHeight);
-      ctx.globalAlpha = 1;
+      canvas.width = width * scale;
+      canvas.height = height * scale;
+      ctx.scale(scale, scale);
 
-      // Dark contrast overlay for crisp white text
-      const overlay = ctx.createLinearGradient(0, 0, width, height);
-      overlay.addColorStop(0, "rgba(12, 20, 52, 0.35)");
-      overlay.addColorStop(0.5, "rgba(12, 20, 52, 0.25)");
-      overlay.addColorStop(1, "rgba(12, 20, 52, 0.40)");
+      const [c1, c2, c3] = currentCard.color;
 
-      ctx.fillStyle = overlay;
-      ctx.fillRect(0, 0, width, height);
+      // 1. Base pastel gradient background
+      const gradient = ctx.createLinearGradient(0, 0, width, height);
+      gradient.addColorStop(0, c1);
+      gradient.addColorStop(0.55, c2);
+      gradient.addColorStop(1, c3);
 
-      ctx.restore();
+      ctx.fillStyle = gradient;
+      roundedRect(ctx, 0, 0, width, height, 100);
+      ctx.fill();
+
+      // 2. Clear background photo
+      const photo = await loadCardImage(currentCard.image);
+
+      if (!currentCard) return;
+
+      if (photo) {
+        ctx.save();
+
+        roundedRect(ctx, 0, 0, width, height, 100);
+        ctx.clip();
+
+        const imageRatio = photo.width / photo.height;
+        const cardRatio = width / height;
+        let drawWidth, drawHeight;
+
+        if (imageRatio > cardRatio) {
+          drawHeight = height;
+          drawWidth = height * imageRatio;
+        } else {
+          drawWidth = width;
+          drawHeight = width / imageRatio;
+        }
+
+        const drawX = (width - drawWidth) / 2;
+        const drawY = (height - drawHeight) / 2;
+
+        ctx.globalAlpha = 0.85;
+        ctx.drawImage(photo, drawX, drawY, drawWidth, drawHeight);
+        ctx.globalAlpha = 1;
+
+        // Dark contrast overlay for crisp white text
+        const overlay = ctx.createLinearGradient(0, 0, width, height);
+        overlay.addColorStop(0, "rgba(12, 20, 52, 0.35)");
+        overlay.addColorStop(0.5, "rgba(12, 20, 52, 0.25)");
+        overlay.addColorStop(1, "rgba(12, 20, 52, 0.40)");
+
+        ctx.fillStyle = overlay;
+        ctx.fillRect(0, 0, width, height);
+
+        ctx.restore();
+      }
+
+      // 3. Card Inner Border
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.6)";
+      ctx.lineWidth = 3;
+      roundedRect(ctx, 19, 19, 662, 942, 80);
+      ctx.stroke();
+
+      // 4. Decorative stars
+      ctx.fillStyle = "rgba(255, 255, 255, 0.75)";
+      [
+        [90, 130],
+        [600, 155],
+        [95, 800],
+        [610, 810],
+        [130, 460],
+        [570, 510],
+        [350, 90],
+        [350, 875],
+      ].forEach(([x, y], i) => {
+        drawStar(ctx, x, y, i % 2 ? 8 : 11);
+      });
+
+      // Dark text shadow helper function
+      const enableDarkShadow = () => {
+        ctx.shadowColor = "rgba(0, 0, 0, 0.8)";
+        ctx.shadowBlur = 10;
+        ctx.shadowOffsetY = 2;
+      };
+      const disableDarkShadow = () => {
+        ctx.shadowColor = "transparent";
+        ctx.shadowBlur = 0;
+        ctx.shadowOffsetY = 0;
+      };
+
+      // 5. Header
+      enableDarkShadow();
+      ctx.textAlign = "left";
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 18px sans-serif";
+      ctx.fillText("A LITTLE MOMENT", 48, 58);
+
+      ctx.textAlign = "right";
+      ctx.font = "bold 16px sans-serif";
+      ctx.fillText(currentCard.number, 652, 58);
+
+      // 6. Icon
+      ctx.textAlign = "center";
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "100px Georgia, serif";
+      ctx.fillText(currentCard.icon, 350, 330);
+
+      // 7. Label
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 19px sans-serif";
+      ctx.fillText(currentCard.label, 350, 405);
+
+      // 8. Title
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 48px Georgia, serif";
+
+      currentCard.title.split("\n").forEach((line, i) => {
+        ctx.fillText(line, 350, 485 + i * 57);
+      });
+
+      // 9. Message
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "600 22px sans-serif";
+      wrapText(ctx, currentCard.message, 350, 635, 520, 35);
+      disableDarkShadow();
+
+      // 10. Footer Line & Text
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(48, 890);
+      ctx.lineTo(652, 890);
+      ctx.stroke();
+
+      enableDarkShadow();
+      ctx.textAlign = "left";
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 17px sans-serif";
+      ctx.fillText("DEW ✦ TEE", 48, 927);
+
+      ctx.textAlign = "right";
+      ctx.font = "28px sans-serif";
+      ctx.fillText("♡", 652, 930);
+      disableDarkShadow();
+
+      // ดาวน์โหลดรูปภาพที่รองรับทั้ง Mobile Safari, iOS และ Desktop
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          showToast("Could not generate image blob. ♡");
+          return;
+        }
+        const fileUrl = URL.createObjectURL(blob);
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+        if (isMobile) {
+          // บนมือถือ เปิดรูปในแท็บใหม่เพื่อให้แตะค้างบันทึกลงคลังภาพ
+          window.open(fileUrl, "_blank");
+          showToast("Opened image! Press & hold to save to Photos. ♡");
+          saveNote.textContent =
+            "Tap & hold the opened image to save to Photos! ♡";
+        } else {
+          // บนคอมพิวเตอร์ ดาวน์โหลดไฟล์โดยอัตโนมัติ
+          const link = document.createElement("a");
+          link.download = `a-little-moment-${currentCard.number.toLowerCase().replace(/[^a-z0-9]+/g, "-")}.png`;
+          link.href = fileUrl;
+          link.click();
+          showToast("Your little keepsake is saved. ♡");
+          saveNote.textContent = "Saved! Keep this little moment close. ♡";
+        }
+      }, "image/png");
+    } catch (error) {
+      console.error("Could not save card:", error);
+      showToast("Could not save the card. Please try again. ♡");
+      saveNote.textContent = "Please try saving your card again. ♡";
+    } finally {
+      saveCardButton.disabled = !currentCard;
     }
-
-    // 3. Card Inner Border
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.6)";
-    ctx.lineWidth = 3;
-    roundedRect(ctx, 19, 19, 662, 942, 80);
-    ctx.stroke();
-
-    // 4. Decorative stars
-    ctx.fillStyle = "rgba(255, 255, 255, 0.75)";
-    [
-      [90, 130],
-      [600, 155],
-      [95, 800],
-      [610, 810],
-      [130, 460],
-      [570, 510],
-      [350, 90],
-      [350, 875],
-    ].forEach(([x, y], i) => {
-      drawStar(ctx, x, y, i % 2 ? 8 : 11);
-    });
-
-    // Dark text shadow helper function
-    const enableDarkShadow = () => {
-      ctx.shadowColor = "rgba(0, 0, 0, 0.8)";
-      ctx.shadowBlur = 10;
-      ctx.shadowOffsetY = 2;
-    };
-    const disableDarkShadow = () => {
-      ctx.shadowColor = "transparent";
-      ctx.shadowBlur = 0;
-      ctx.shadowOffsetY = 0;
-    };
-
-    // 5. Header
-    enableDarkShadow();
-    ctx.textAlign = "left";
-    ctx.fillStyle = "#ffffff";
-    ctx.font = "bold 18px sans-serif";
-    ctx.letterSpacing = "3px";
-    ctx.fillText("A LITTLE MOMENT", 48, 58);
-
-    ctx.textAlign = "right";
-    ctx.font = "bold 16px sans-serif";
-    ctx.letterSpacing = "0px";
-    ctx.fillText(currentCard.number, 652, 58);
-
-    // 6. Icon
-    ctx.textAlign = "center";
-    ctx.fillStyle = "#ffffff";
-    ctx.font = "100px Georgia, serif";
-    ctx.fillText(currentCard.icon, 350, 330);
-
-    // 7. Label
-    ctx.fillStyle = "#ffffff";
-    ctx.font = "bold 19px sans-serif";
-    ctx.letterSpacing = "4px";
-    ctx.fillText(currentCard.label, 350, 405);
-
-    // 8. Title
-    ctx.fillStyle = "#ffffff";
-    ctx.font = "bold 48px Georgia, serif";
-    ctx.letterSpacing = "0px";
-
-    currentCard.title.split("\n").forEach((line, i) => {
-      ctx.fillText(line, 350, 485 + i * 57);
-    });
-
-    // 9. Message
-    ctx.fillStyle = "#ffffff";
-    ctx.font = "600 22px sans-serif";
-    ctx.letterSpacing = "0px";
-    wrapText(ctx, currentCard.message, 350, 635, 520, 35);
-    disableDarkShadow();
-
-    // 10. Footer Line & Text
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(48, 890);
-    ctx.lineTo(652, 890);
-    ctx.stroke();
-
-    enableDarkShadow();
-    ctx.textAlign = "left";
-    ctx.fillStyle = "#ffffff";
-    ctx.font = "bold 17px sans-serif";
-    ctx.letterSpacing = "3px";
-    ctx.fillText("DEW ✦ TEE", 48, 927);
-
-    ctx.textAlign = "right";
-    ctx.font = "28px sans-serif";
-    ctx.letterSpacing = "0px";
-    ctx.fillText("♡", 652, 930);
-    disableDarkShadow();
-
-    const link = document.createElement("a");
-    link.download = `a-little-moment-${currentCard.number.toLowerCase().replace(/[^a-z0-9]+/g, "-")}.png`;
-    link.href = canvas.toDataURL("image/png");
-    link.click();
-
-    showToast("Your little keepsake is saved. ♡");
-    saveNote.textContent = "Saved! Keep this little moment close. ♡";
-  } catch (error) {
-    console.error("Could not save card:", error);
-    showToast("Could not save the card. Please try again. ♡");
-    saveNote.textContent = "Please try saving your card again. ♡";
-  } finally {
-    saveCardButton.disabled = !currentCard;
-  }
-});
+  });
+}
 
 function roundedRect(ctx, x, y, w, h, r) {
   ctx.beginPath();
