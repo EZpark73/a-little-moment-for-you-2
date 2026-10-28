@@ -53,7 +53,7 @@
       label: "HAPPY ENERGY",
       title: "A little joy\nfinds its way.",
       message: "ขอให้วันนี้มีเรื่องเล็ก ๆ ที่ทำให้คุณยิ้มได้",
-      color: ["#edf1ff", "#b9c9f4", "#e9d9ef"],
+      color: ["#f8e8c8", "#e8b36e", "#9fb0d8"],
       image: "images/1.JPG",
     },
     {
@@ -62,7 +62,7 @@
       label: "LUCKY MOMENT",
       title: "Good things\nare on their way.",
       message: "ขอให้ความสุขเดินทางมาหาคุณในเวลาที่พอดี",
-      color: ["#e6f4ff", "#b4d4f2", "#d9e1ff"],
+      color: ["#fbe9cf", "#eeaa66", "#7f96c9"],
       image: "images/2.JPG",
     },
     {
@@ -71,7 +71,7 @@
       label: "A NOTE FOR YOU",
       title: "You make this\nmoment shine.",
       message: "ขอบคุณที่เป็นส่วนหนึ่งของความทรงจำดี ๆ วันนี้",
-      color: ["#fff0f8", "#eac5e2", "#d4ddff"],
+      color: ["#f6dcc0", "#d98c57", "#b8c3e3"],
       image: "images/3.JPG",
     },
     {
@@ -80,7 +80,7 @@
       label: "SOFT REMINDER",
       title: "You deserve\nsoft days, too.",
       message: "อย่าลืมใจดีกับตัวเอง เหมือนที่คุณใจดีกับคนอื่นนะ",
-      color: ["#f0f2ff", "#c9d3fa", "#e9d6e9"],
+      color: ["#f3e4c4", "#cfa76a", "#8fa6d1"],
       image: "images/4.JPG",
     },
     {
@@ -89,7 +89,7 @@
       label: "FANCON MEMORY",
       title: "Keep this little\nlight with you.",
       message: "ขอให้ความทรงจำวันนี้เป็นแสงเล็ก ๆ ในวันที่เหนื่อย",
-      color: ["#e8edff", "#bdc8f4", "#d8e6f5"],
+      color: ["#fff0d2", "#f0bf6e", "#a9b8dc"],
       image: "images/5.JPG",
     },
     {
@@ -98,7 +98,7 @@
       label: "WISHING YOU WELL",
       title: "May your heart\nfeel at home.",
       message: "ขอให้คุณได้อยู่ท่ามกลางสิ่งที่ทำให้หัวใจอบอุ่นเสมอ",
-      color: ["#f2edff", "#c8c5f4", "#e5d5f1"],
+      color: ["#f4dcc2", "#dd9a62", "#8c9fcf"],
       image: "images/6.JPG",
     },
   ];
@@ -132,6 +132,24 @@
       fragment.appendChild(star);
     }
     starfield.appendChild(fragment);
+
+    // A few leaves drifting down slowly (skipped for reduced motion)
+    if (!prefersReducedMotion) {
+      const leafCount = window.innerWidth < 600 ? 5 : 8;
+      const leaves = document.createDocumentFragment();
+      for (let i = 0; i < leafCount; i++) {
+        const leaf = document.createElement("span");
+        leaf.className = "leaf";
+        const size = 0.8 + Math.random() * 0.8;
+        leaf.style.left = `${5 + Math.random() * 90}%`;
+        leaf.style.transform = `scale(${size})`;
+        leaf.style.setProperty("--sway", `${20 + Math.random() * 40}px`);
+        leaf.style.animationDuration = `${16 + Math.random() * 12}s`;
+        leaf.style.animationDelay = `${-Math.random() * 28}s`;
+        leaves.appendChild(leaf);
+      }
+      starfield.appendChild(leaves);
+    }
   }
 
   /* ---------- Helpers ---------- */
@@ -459,12 +477,12 @@
       ctx.restore();
     }
 
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.6)";
+    ctx.strokeStyle = "rgba(255, 232, 178, 0.7)";
     ctx.lineWidth = 3;
     roundedRect(ctx, 19, 19, 662, 942, 80);
     ctx.stroke();
 
-    ctx.fillStyle = "rgba(255, 255, 255, 0.75)";
+    ctx.fillStyle = "rgba(255, 232, 170, 0.85)";
     [
       [90, 130],
       [600, 155],
