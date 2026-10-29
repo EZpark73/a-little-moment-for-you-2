@@ -22,6 +22,7 @@
   const wishFeedback = $("wishFeedback");
   const characterCount = $("characterCount");
   const wishesWall = $("wishesWall");
+  const pagination = $("pagination");
   const toast = $("toast");
 
   // Firestore instance is created safely in index.html (null if unavailable)
@@ -1064,6 +1065,97 @@
       });
     });
   });
+
+  /* ---------- Wishes wall (random order + pagination) ---------- */
+  function renderWallMessage(text, withButton) {
+    wishesWall.replaceChildren();
+    if (pagination) pagination.replaceChildren();
+
+    const box = document.createElement("div");
+    box.className = "wall-empty";
+
+    const star = document.createElement("span");
+    star.className = "wall-empty-star";
+    star.textContent = "✧";
+
+    const p = document.createElement("p");
+    p.textContent = text;
+
+    box.append(star, p);
+
+    if (withButton) {
+      const button = document.createElement("button");
+      button.className = "secondary-button";
+      button.type = "button";
+      button.textContent = "Be the first to send some love";
+      button.addEventListener("click", () => showPage("wish"));
+      box.appendChild(button);
+    }
+
+    wishesWall.appendChild(box);
+  }
+
+  function pageItems(current, total) {
+    if (total <= 5) return Array.from({ length: total }, (_, i) => i + 1);
+    const set = new Set([1, total, current, current - 1, current + 1]);
+    const nums = [...set]
+      .filter((n) => n >= 1 && n <= total)
+      .sort((a, b) => a - b);
+    const out = [];
+    nums.forEach((n, i) => {
+      if (i && n - nums[i - 1] > 1) out.push("…");
+      out.push(n);
+    });
+    return out;
+  }
+
+  function renderPagination(total) {
+    if (!pagination) return;
+    pagination.replaceChildren();
+    if (total <= 1) return;
+
+    const make = (label, page, opts = {}) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "page-btn" + (opts.current ? " current" : "");
+      b.textContent = label;
+      b.disabled = !!opts.disabled;
+      if (opts.aria) b.setAttribute("aria-label", opts.aria);
+      if (opts.current) b.setAttribute("aria-current", "page");
+      b.addEventListener("click", () => {
+        wishPage = page;
+        renderWishPage();
+      });
+      return b;
+    };
+
+    pagination.append(
+      make("‹", wishPage - 1, {
+        disabled: wishPage === 1,
+        aria: "Previous page",
+      }),
+    );
+
+    pageItems(wishPage, total).forEach((item) => {
+      if (item === "…") {
+        const gap = document.createElement("span");
+        gap.className = "page-gap";
+        gap.textContent = "…";
+        pagination.append(gap);
+      } else {
+        pagination.append(
+          make(String(item), item, { current: item === wishPage }),
+        );
+      }
+    });
+
+    pagination.append(
+      make("›", wishPage + 1, {
+        disabled: wishPage === total,
+        aria: "Next page",
+      }),
+    );
+  }
 
   /* ---------- Starfield ---------- */
   if (starfield) {
