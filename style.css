@@ -2113,3 +2113,6 @@ h1 {
 .fortune-card .card-source[hidden] {
   display: none;
 }
+.eyebrow {
+  transform: translateY(-8px);
+}
