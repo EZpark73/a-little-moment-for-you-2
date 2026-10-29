@@ -54,41 +54,76 @@
   let wishPage = 1;
   let wallReady = false;
 
-  /* ---------- Cards (88 quotes from cards.js) ---------- */
-  const PALETTES = [
-    ["#f8e8c8", "#e8b36e", "#9fb0d8"],
-    ["#fbe9cf", "#eeaa66", "#7f96c9"],
-    ["#f6dcc0", "#d98c57", "#b8c3e3"],
-    ["#f3e4c4", "#cfa76a", "#8fa6d1"],
-    ["#fff0d2", "#f0bf6e", "#a9b8dc"],
-    ["#f4dcc2", "#dd9a62", "#8c9fcf"],
-  ];
-  const ICONS = ["☾", "✦", "♡", "☼", "✧", "☆"];
-  const QUOTES = Array.isArray(window.CARD_QUOTES) ? window.CARD_QUOTES : [];
-
-  const cards = QUOTES.map((q, i) => ({
-    number: `NO. ${String(i + 1).padStart(2, "0")}`,
-    icon: ICONS[i % ICONS.length],
-    label: "A LITTLE QUOTE",
-    source: `${q[0]} — ${q[1]}` + (q[4] ? ` ✦ ${q[4]}` : ""),
-    title: q[2],
-    message: q[3],
-    color: PALETTES[i % PALETTES.length],
-    image: `images/${(i % 6) + 1}.JPG`,
-  }));
-
-  if (!cards.length) {
-    cards.push({
+  /* ---------- Cards ---------- */
+  const cards = [
+    {
       number: "NO. 01",
       icon: "☾",
-      label: "A LITTLE QUOTE",
-      source: "DEW ✦ TEE",
-      title: "A little joy finds its way.",
+      label: "HAPPY ENERGY",
+      title: "A little joy\nfinds its way.",
       message: "ขอให้วันนี้มีเรื่องเล็ก ๆ ที่ทำให้คุณยิ้มได้",
-      color: PALETTES[0],
+      color: ["#f8e8c8", "#e8b36e", "#9fb0d8"],
       image: "images/1.JPG",
+    },
+    {
+      number: "NO. 02",
+      icon: "✦",
+      label: "LUCKY MOMENT",
+      title: "Good things\nare on their way.",
+      message: "ขอให้ความสุขเดินทางมาหาคุณในเวลาที่พอดี",
+      color: ["#fbe9cf", "#eeaa66", "#7f96c9"],
+      image: "images/2.JPG",
+    },
+    {
+      number: "NO. 03",
+      icon: "♡",
+      label: "A NOTE FOR YOU",
+      title: "You make this\nmoment shine.",
+      message: "ขอบคุณที่เป็นส่วนหนึ่งของความทรงจำดี ๆ วันนี้",
+      color: ["#f6dcc0", "#d98c57", "#b8c3e3"],
+      image: "images/3.JPG",
+    },
+    {
+      number: "NO. 04",
+      icon: "☼",
+      label: "SOFT REMINDER",
+      title: "You deserve\nsoft days, too.",
+      message: "อย่าลืมใจดีกับตัวเอง เหมือนที่คุณใจดีกับคนอื่นนะ",
+      color: ["#f3e4c4", "#cfa76a", "#8fa6d1"],
+      image: "images/4.JPG",
+    },
+    {
+      number: "NO. 05",
+      icon: "✧",
+      label: "FANCON MEMORY",
+      title: "Keep this little\nlight with you.",
+      message: "ขอให้ความทรงจำวันนี้เป็นแสงเล็ก ๆ ในวันที่เหนื่อย",
+      color: ["#fff0d2", "#f0bf6e", "#a9b8dc"],
+      image: "images/5.JPG",
+    },
+    {
+      number: "NO. 06",
+      icon: "☆",
+      label: "WISHING YOU WELL",
+      title: "May your heart\nfeel at home.",
+      message: "ขอให้คุณได้อยู่ท่ามกลางสิ่งที่ทำให้หัวใจอบอุ่นเสมอ",
+      color: ["#f4dcc2", "#dd9a62", "#8c9fcf"],
+      image: "images/6.JPG",
+    },
+  ];
+
+  // Warm the image cache after the page has loaded, without blocking first paint
+  window.addEventListener("load", () => {
+    const idle =
+      window.requestIdleCallback || ((fn) => window.setTimeout(fn, 1200));
+    idle(() => {
+      cards.forEach((card) => {
+        const img = new Image();
+        img.decoding = "async";
+        img.src = card.image;
+      });
     });
-  }
+  });
 
   // การ์ดหน้าเว็บ: ใช้ขนาดเดิม (25px) ลดเฉพาะเมื่อข้อความยาว
   function cardSizes(card) {
