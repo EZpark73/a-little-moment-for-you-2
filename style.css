@@ -1664,7 +1664,7 @@ body::before {
         transparent 3px 76px
       ),
     /* ผนังกรมท่า */
-    linear-gradient(180deg, #121a40 0%, #1a2150 38%, #2a2240 70%, #2a1a14 90%);
+    linear-gradient(180deg, #121a40 0%, #1a2150 38%, #2a2240 70%);
 }
 
 body::after {
