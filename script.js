@@ -1328,50 +1328,270 @@
   }
 
   /* ---------- Save card as image ---------- */
+  const SANS = '"DM Sans", "Noto Sans Thai", sans-serif';
+  const THAI = '"Noto Sans Thai", "DM Sans", sans-serif';
+  const SERIF = 'Georgia, "Noto Sans Thai", serif';
 
-  const starLayer = document.createElement("div");
-
-  starLayer.setAttribute("aria-hidden", "true");
-
-  Object.assign(starLayer.style, {
-    position: "absolute",
-    inset: "0",
-    pointerEvents: "none",
-    overflow: "hidden",
-    zIndex: "10",
-  });
-
-  [
-    [13, 13, 11],
-    [86, 16, 8],
-    [14, 82, 8],
-    [87, 83, 11],
-    [19, 47, 6],
-    [81, 52, 6],
-    [50, 9, 8],
-    [50, 90, 8],
-  ].forEach(([x, y, size]) => {
-    const star = document.createElement("span");
-    star.textContent = "✦";
-
-    Object.assign(star.style, {
-      position: "absolute",
-      left: `${x}%`,
-      top: `${y}%`,
-      transform: "translate(-50%, -50%)",
-      fontSize: `${size}px`,
-      color: "rgba(255, 232, 170, 0.95)",
-      textShadow: "0 0 8px rgba(255, 232, 170, 0.7)",
+  function loadCardImage(src) {
+    return new Promise((resolve) => {
+      const image = new Image();
+      image.onload = () => resolve(image);
+      image.onerror = () => resolve(null);
+      image.src = src;
     });
-
-    starLayer.appendChild(star);
-  });
-
-  if (getComputedStyle(clone).position === "static") {
-    clone.style.position = "relative";
   }
 
-  clone.appendChild(starLayer);
+  async function ensureFonts(text) {
+    if (!document.fonts || !document.fonts.load) return;
+    try {
+      await withTimeout(
+        Promise.all([
+          document.fonts.load('600 22px "Noto Sans Thai"', text),
+          document.fonts.load('700 18px "DM Sans"'),
+        ]),
+        2500,
+      );
+    } catch (error) {
+      // Fall back to system fonts
+    }
+  }
+
+  function roundedRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+
+  function drawStar(ctx, x, y, radius) {
+    ctx.beginPath();
+    for (let i = 0; i < 10; i++) {
+      const angle = -Math.PI / 2 + (i * Math.PI) / 5;
+      const r = i % 2 === 0 ? radius : radius * 0.42;
+      const px = x + Math.cos(angle) * r;
+      const py = y + Math.sin(angle) * r;
+      if (i === 0) ctx.moveTo(px, py);
+      else ctx.lineTo(px, py);
+    }
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  // Splits text into wrap-friendly pieces. Thai has no spaces, so use the
+  // browser's word segmenter when available to avoid breaking mid-word.
+  function segmentText(text) {
+    if (typeof Intl !== "undefined" && typeof Intl.Segmenter === "function") {
+      try {
+        const segmenter = new Intl.Segmenter("th", { granularity: "word" });
+        return Array.from(segmenter.segment(text), (item) => item.segment);
+      } catch (error) {
+        // fall through
+      }
+    }
+    return text.includes(" ") ? text.split(/(?<= )/) : Array.from(text);
+  }
+
+  // Draws one line centered on `cx`. Some mobile browsers mis-handle
+  // textAlign="center" for Thai text (the line starts at the center instead),
+  // so the position is computed manually from the measured width.
+  function fillCentered(ctx, text, cx, y) {
+    const previousAlign = ctx.textAlign;
+    ctx.textAlign = "left";
+    const width = ctx.measureText(text).width;
+    ctx.fillText(text, cx - width / 2, y);
+    ctx.textAlign = previousAlign;
+  }
+
+  // Breaks text into lines no wider than `maxWidth` (uses the current ctx.font)
+  function getLines(ctx, text, maxWidth) {
+    const pieces = segmentText(text);
+    const lines = [];
+    let line = "";
+
+    pieces.forEach((piece) => {
+      const test = line + piece;
+      if (ctx.measureText(test.trimEnd()).width > maxWidth && line.trim()) {
+        lines.push(line.trimEnd());
+        line = piece.trimStart();
+      } else {
+        line = test;
+      }
+    });
+
+    if (line.trim()) lines.push(line.trimEnd());
+    return lines;
+  }
+
+  async function renderCardCanvas(card) {
+    await ensureFonts(card.message);
+
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+
+    const scale = 2;
+    const width = 700;
+    const height = 980;
+
+    canvas.width = width * scale;
+    canvas.height = height * scale;
+    ctx.scale(scale, scale);
+
+    const [c1, c2, c3] = card.color;
+
+    const gradient = ctx.createLinearGradient(0, 0, width, height);
+    gradient.addColorStop(0, c1);
+    gradient.addColorStop(0.55, c2);
+    gradient.addColorStop(1, c3);
+
+    ctx.fillStyle = gradient;
+    roundedRect(ctx, 0, 0, width, height, 100);
+    ctx.fill();
+
+    const photo = await loadCardImage(card.image);
+
+    if (photo) {
+      ctx.save();
+      roundedRect(ctx, 0, 0, width, height, 100);
+      ctx.clip();
+
+      const imageRatio = photo.width / photo.height;
+      const cardRatio = width / height;
+      let drawWidth;
+      let drawHeight;
+
+      if (imageRatio > cardRatio) {
+        drawHeight = height;
+        drawWidth = height * imageRatio;
+      } else {
+        drawWidth = width;
+        drawHeight = width / imageRatio;
+      }
+
+      const drawX = (width - drawWidth) / 2;
+      const drawY = (height - drawHeight) / 2;
+
+      ctx.globalAlpha = 0.85;
+      ctx.drawImage(photo, drawX, drawY, drawWidth, drawHeight);
+      ctx.globalAlpha = 1;
+
+      const overlay = ctx.createLinearGradient(0, 0, width, height);
+      overlay.addColorStop(0, "rgba(12, 20, 52, 0.35)");
+      overlay.addColorStop(0.5, "rgba(12, 20, 52, 0.25)");
+      overlay.addColorStop(1, "rgba(12, 20, 52, 0.40)");
+
+      ctx.fillStyle = overlay;
+      ctx.fillRect(0, 0, width, height);
+
+      // Extra shade toward the bottom so the text stays readable on busy photos
+      const bottomShade = ctx.createLinearGradient(0, height * 0.35, 0, height);
+      bottomShade.addColorStop(0, "rgba(10, 16, 40, 0)");
+      bottomShade.addColorStop(1, "rgba(10, 16, 40, 0.55)");
+      ctx.fillStyle = bottomShade;
+      ctx.fillRect(0, 0, width, height);
+
+      ctx.restore();
+    }
+
+    ctx.strokeStyle = "rgba(255, 232, 178, 0.7)";
+    ctx.lineWidth = 3;
+    roundedRect(ctx, 19, 19, 662, 942, 80);
+    ctx.stroke();
+
+    ctx.fillStyle = "rgba(255, 232, 170, 0.85)";
+    [
+      [90, 130],
+      [600, 155],
+      [95, 800],
+      [610, 810],
+      [130, 460],
+      [570, 510],
+      [350, 90],
+      [350, 875],
+    ].forEach(([x, y], i) => drawStar(ctx, x, y, i % 2 ? 8 : 11));
+
+    const shadowOn = () => {
+      ctx.shadowColor = "rgba(0, 0, 0, 0.8)";
+      ctx.shadowBlur = 10;
+      ctx.shadowOffsetY = 2;
+    };
+    const shadowOff = () => {
+      ctx.shadowColor = "transparent";
+      ctx.shadowBlur = 0;
+      ctx.shadowOffsetY = 0;
+    };
+
+    shadowOn();
+    ctx.textBaseline = "alphabetic";
+    ctx.fillStyle = "#ffffff";
+
+    ctx.textAlign = "left";
+    ctx.font = `bold 18px ${SANS}`;
+    ctx.fillText("A LITTLE MOMENT", 48, 58);
+
+    ctx.textAlign = "right";
+    ctx.font = `bold 16px ${SANS}`;
+    ctx.fillText(card.number, 652, 58);
+
+    ctx.textAlign = "center";
+    ctx.font = `100px ${SERIF}`;
+    ctx.fillText(card.icon, 350, 330);
+
+    ctx.font = `bold 19px ${SANS}`;
+    ctx.fillText(card.label, 350, 405);
+
+    // Title: shrink so the widest line stays within 580px
+    const titleLines = card.title.split("\n");
+    let titleSize = 48;
+    let widest = 0;
+    do {
+      ctx.font = `bold ${titleSize}px ${SERIF}`;
+      widest = Math.max(...titleLines.map((l) => ctx.measureText(l).width));
+      if (widest > 580) titleSize -= 2;
+    } while (widest > 580 && titleSize > 26);
+
+    const titleLH = titleSize * 1.18;
+    titleLines.forEach((line, i) => {
+      fillCentered(ctx, line, 350, 485 + i * titleLH);
+    });
+
+    // Message: shrink until it fits in at most 4 lines
+    let msgSize = 22;
+    let msgLines;
+    do {
+      ctx.font = `600 ${msgSize}px ${THAI}`;
+      msgLines = getLines(ctx, card.message, 520);
+      if (msgLines.length > 4) msgSize -= 1;
+    } while (msgLines.length > 4 && msgSize > 15);
+
+    const msgLH = msgSize * 1.7;
+    const msgY = 485 + titleLH * (titleLines.length - 1) + 80;
+    msgLines.forEach((line, i) => {
+      fillCentered(ctx, line, 350, msgY + i * msgLH);
+    });
+    shadowOff();
+
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(48, 890);
+    ctx.lineTo(652, 890);
+    ctx.stroke();
+
+    shadowOn();
+    ctx.textAlign = "left";
+    ctx.font = `bold 17px ${SANS}`;
+    ctx.fillText("DEW ✦ TEE", 48, 927);
+
+    ctx.textAlign = "right";
+    ctx.font = `28px ${SANS}`;
+    ctx.fillText("♡", 652, 930);
+    shadowOff();
+
+    return canvas;
+  }
 
   function canvasToBlob(canvas) {
     return new Promise((resolve, reject) => {
