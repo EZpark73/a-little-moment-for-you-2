@@ -2113,15 +2113,3 @@ h1 {
 .fortune-card .card-source[hidden] {
   display: none;
 }
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 12px;
-}
-
-.pagination:empty {
-  display: none;
-}
