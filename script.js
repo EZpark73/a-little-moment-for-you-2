@@ -5,7 +5,6 @@
   const $ = (id) => document.getElementById(id);
 
   const starfield = $("starfield");
-  const letterPage = $("page-letter");
   const envelopeButton = $("envelopeButton");
   const paperNote = $("paperNote");
   const paperLines = $("paperLines");
@@ -23,7 +22,6 @@
   const wishFeedback = $("wishFeedback");
   const characterCount = $("characterCount");
   const wishesWall = $("wishesWall");
-  const pagination = $("pagination");
   const toast = $("toast");
 
   // Firestore instance is created safely in index.html (null if unavailable)
@@ -41,76 +39,80 @@
   const DEFAULT_WISH_FEEDBACK =
     "Some wishes are beautiful just because you made them. ♡";
   const WISH_TIMEOUT_MS = 15000;
-  const WISHES_PER_PAGE = 4;
 
   let currentCard = null;
   let toastTimer;
   let activeSheet = null;
   let submitting = false;
 
-  // wishes wall state
-  let allWishes = [];
-  let wishOrder = [];
-  let wishPage = 1;
-  let wallReady = false;
-
-  /* ---------- Cards (88 quotes from cards.js) ---------- */
-  const PALETTES = [
-    ["#f8e8c8", "#e8b36e", "#9fb0d8"],
-    ["#fbe9cf", "#eeaa66", "#7f96c9"],
-    ["#f6dcc0", "#d98c57", "#b8c3e3"],
-    ["#f3e4c4", "#cfa76a", "#8fa6d1"],
-    ["#fff0d2", "#f0bf6e", "#a9b8dc"],
-    ["#f4dcc2", "#dd9a62", "#8c9fcf"],
-  ];
-  const ICONS = ["☾", "✦", "♡", "☼", "✧", "☆"];
-  const QUOTES = Array.isArray(window.CARD_QUOTES) ? window.CARD_QUOTES : [];
-
-  const cards = QUOTES.map((q, i) => ({
-    number: `NO. ${String(i + 1).padStart(2, "0")}`,
-    icon: ICONS[i % ICONS.length],
-    label: "A LITTLE QUOTE",
-    source: `${q[0]} — ${q[1]}` + (q[4] ? ` ✦ ${q[4]}` : ""),
-    title: q[2],
-    message: q[3],
-    color: PALETTES[i % PALETTES.length],
-    image: `images/${(i % 6) + 1}.JPG`,
-  }));
-
-  if (!cards.length) {
-    cards.push({
+  /* ---------- Cards ---------- */
+  const cards = [
+    {
       number: "NO. 01",
       icon: "☾",
-      label: "A LITTLE QUOTE",
-      source: "DEW ✦ TEE",
-      title: "A little joy finds its way.",
+      label: "HAPPY ENERGY",
+      title: "A little joy\nfinds its way.",
       message: "ขอให้วันนี้มีเรื่องเล็ก ๆ ที่ทำให้คุณยิ้มได้",
-      color: PALETTES[0],
+      color: ["#f8e8c8", "#e8b36e", "#9fb0d8"],
       image: "images/1.JPG",
-    });
-  }
-
-  // ขนาดตัวอักษรตามความยาวข้อความ (การ์ดบนหน้าเว็บ)
-  function cardSizes(card) {
-    const L = card.title.length;
-    const T = card.message.length;
-    return {
-      en: L <= 40 ? 21 : L <= 70 ? 17 : L <= 100 ? 14.5 : 12.5,
-      th: T <= 40 ? 11 : T <= 70 ? 10 : 9.2,
-      ic: L > 100 ? 30 : 44,
-    };
-  }
+    },
+    {
+      number: "NO. 02",
+      icon: "✦",
+      label: "LUCKY MOMENT",
+      title: "Good things\nare on their way.",
+      message: "ขอให้ความสุขเดินทางมาหาคุณในเวลาที่พอดี",
+      color: ["#fbe9cf", "#eeaa66", "#7f96c9"],
+      image: "images/2.JPG",
+    },
+    {
+      number: "NO. 03",
+      icon: "♡",
+      label: "A NOTE FOR YOU",
+      title: "You make this\nmoment shine.",
+      message: "ขอบคุณที่เป็นส่วนหนึ่งของความทรงจำดี ๆ วันนี้",
+      color: ["#f6dcc0", "#d98c57", "#b8c3e3"],
+      image: "images/3.JPG",
+    },
+    {
+      number: "NO. 04",
+      icon: "☼",
+      label: "SOFT REMINDER",
+      title: "You deserve\nsoft days, too.",
+      message: "อย่าลืมใจดีกับตัวเอง เหมือนที่คุณใจดีกับคนอื่นนะ",
+      color: ["#f3e4c4", "#cfa76a", "#8fa6d1"],
+      image: "images/4.JPG",
+    },
+    {
+      number: "NO. 05",
+      icon: "✧",
+      label: "FANCON MEMORY",
+      title: "Keep this little\nlight with you.",
+      message: "ขอให้ความทรงจำวันนี้เป็นแสงเล็ก ๆ ในวันที่เหนื่อย",
+      color: ["#fff0d2", "#f0bf6e", "#a9b8dc"],
+      image: "images/5.JPG",
+    },
+    {
+      number: "NO. 06",
+      icon: "☆",
+      label: "WISHING YOU WELL",
+      title: "May your heart\nfeel at home.",
+      message: "ขอให้คุณได้อยู่ท่ามกลางสิ่งที่ทำให้หัวใจอบอุ่นเสมอ",
+      color: ["#f4dcc2", "#dd9a62", "#8c9fcf"],
+      image: "images/6.JPG",
+    },
+  ];
 
   // Warm the image cache after the page has loaded, without blocking first paint
   window.addEventListener("load", () => {
     const idle =
       window.requestIdleCallback || ((fn) => window.setTimeout(fn, 1200));
     idle(() => {
-      for (let i = 1; i <= 6; i++) {
+      cards.forEach((card) => {
         const img = new Image();
         img.decoding = "async";
-        img.src = `images/${i}.JPG`;
-      }
+        img.src = card.image;
+      });
     });
   });
 
@@ -194,14 +196,6 @@
     return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
   }
 
-  function shuffle(arr) {
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    return arr;
-  }
-
   /* ---------- Page navigation ---------- */
   const pages = Array.from(document.querySelectorAll(".page-view"));
 
@@ -234,10 +228,6 @@
     if (name === "wish" && !submitting) {
       wishFeedback.textContent = DEFAULT_WISH_FEEDBACK;
     }
-
-    if (name === "wishes") {
-      reshuffleWishes();
-    }
   }
 
   document.querySelectorAll("[data-go]").forEach((button) => {
@@ -259,7 +249,6 @@
       paperNote.hidden = !isOpen;
       paperLines.hidden = isOpen;
       letterNext.disabled = !isOpen;
-      if (letterPage) letterPage.classList.toggle("letter-open", isOpen);
 
       envelopeHint.innerHTML = isOpen
         ? "YOUR LETTER IS OPEN <span>♡</span>"
@@ -278,10 +267,9 @@
 
   /* ---------- Draw a card ---------- */
   function pickCard() {
-    const pool =
-      currentCard && cards.length > 1
-        ? cards.filter((card) => card.number !== currentCard.number)
-        : cards;
+    const pool = currentCard
+      ? cards.filter((card) => card.number !== currentCard.number)
+      : cards;
     return pool[Math.floor(Math.random() * pool.length)];
   }
 
@@ -289,14 +277,15 @@
     $("cardNumber").textContent = card.number;
     $("cardIcon").textContent = card.icon;
     $("cardLabel").textContent = card.label;
-    $("cardTitle").textContent = card.title;
-    $("cardMessage").textContent = card.message;
-    $("cardSource").textContent = card.source;
 
-    const s = cardSizes(card);
-    fortuneCard.style.setProperty("--en", `${s.en}px`);
-    fortuneCard.style.setProperty("--th", `${s.th}px`);
-    fortuneCard.style.setProperty("--ic", `${s.ic}px`);
+    const titleEl = $("cardTitle");
+    titleEl.replaceChildren();
+    card.title.split("\n").forEach((line, index) => {
+      if (index) titleEl.appendChild(document.createElement("br"));
+      titleEl.appendChild(document.createTextNode(line));
+    });
+
+    $("cardMessage").textContent = card.message;
 
     fortuneCard.style.background =
       `linear-gradient(155deg, ${card.color[0]} 0%, ` +
@@ -394,7 +383,8 @@
   }
 
   // Draws one line centered on `cx`. Some mobile browsers mis-handle
-  // textAlign="center" for Thai text, so the position is computed manually.
+  // textAlign="center" for Thai text (the line starts at the center instead),
+  // so the position is computed manually from the measured width.
   function fillCentered(ctx, text, cx, y) {
     const previousAlign = ctx.textAlign;
     ctx.textAlign = "left";
@@ -403,34 +393,26 @@
     ctx.textAlign = previousAlign;
   }
 
-  // Splits text into lines that fit maxWidth (uses the current ctx.font)
-  function wrapLines(ctx, text, maxWidth) {
+  // Wraps and draws text centered on `x`
+  function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
     const pieces = segmentText(text);
-    const lines = [];
     let line = "";
+    let lineIndex = 0;
 
     pieces.forEach((piece) => {
       const test = line + piece;
       if (ctx.measureText(test.trimEnd()).width > maxWidth && line.trim()) {
-        lines.push(line.trimEnd());
+        fillCentered(ctx, line.trimEnd(), x, y + lineIndex * lineHeight);
         line = piece.trimStart();
+        lineIndex++;
       } else {
         line = test;
       }
     });
 
-    if (line.trim()) lines.push(line.trimEnd());
-    return lines;
-  }
-
-  function canvasSizes(card) {
-    const L = card.title.length;
-    const T = card.message.length;
-    return {
-      en: L <= 40 ? 46 : L <= 70 ? 38 : L <= 100 ? 32 : 27,
-      th: T <= 40 ? 26 : T <= 70 ? 24 : 21,
-      ic: L > 100 ? 70 : 90,
-    };
+    if (line.trim()) {
+      fillCentered(ctx, line.trimEnd(), x, y + lineIndex * lineHeight);
+    }
   }
 
   async function renderCardCanvas(card) {
@@ -439,13 +421,12 @@
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
 
-    // มือถือใช้ความละเอียดต่ำลงเล็กน้อย เพื่อไม่ให้หน่วยความจำเต็ม
-    const scale = isMobile ? 1.5 : 2;
+    const scale = 2;
     const width = 700;
     const height = 980;
 
-    canvas.width = Math.round(width * scale);
-    canvas.height = Math.round(height * scale);
+    canvas.width = width * scale;
+    canvas.height = height * scale;
     ctx.scale(scale, scale);
 
     const [c1, c2, c3] = card.color;
@@ -462,43 +443,38 @@
     const photo = await loadCardImage(card.image);
 
     if (photo) {
-      try {
-        ctx.save();
-        roundedRect(ctx, 0, 0, width, height, 100);
-        ctx.clip();
+      ctx.save();
+      roundedRect(ctx, 0, 0, width, height, 100);
+      ctx.clip();
 
-        const imageRatio = photo.width / photo.height;
-        const cardRatio = width / height;
-        let drawWidth;
-        let drawHeight;
+      const imageRatio = photo.width / photo.height;
+      const cardRatio = width / height;
+      let drawWidth;
+      let drawHeight;
 
-        if (imageRatio > cardRatio) {
-          drawHeight = height;
-          drawWidth = height * imageRatio;
-        } else {
-          drawWidth = width;
-          drawHeight = width / imageRatio;
-        }
-
-        const drawX = (width - drawWidth) / 2;
-        const drawY = (height - drawHeight) / 2;
-
-        ctx.globalAlpha = 0.85;
-        ctx.drawImage(photo, drawX, drawY, drawWidth, drawHeight);
-        ctx.globalAlpha = 1;
-
-        const overlay = ctx.createLinearGradient(0, 0, width, height);
-        overlay.addColorStop(0, "rgba(12, 20, 52, 0.35)");
-        overlay.addColorStop(0.5, "rgba(12, 20, 52, 0.25)");
-        overlay.addColorStop(1, "rgba(12, 20, 52, 0.40)");
-
-        ctx.fillStyle = overlay;
-        ctx.fillRect(0, 0, width, height);
-        ctx.restore();
-      } catch (error) {
-        ctx.restore();
-        ctx.globalAlpha = 1;
+      if (imageRatio > cardRatio) {
+        drawHeight = height;
+        drawWidth = height * imageRatio;
+      } else {
+        drawWidth = width;
+        drawHeight = width / imageRatio;
       }
+
+      const drawX = (width - drawWidth) / 2;
+      const drawY = (height - drawHeight) / 2;
+
+      ctx.globalAlpha = 0.85;
+      ctx.drawImage(photo, drawX, drawY, drawWidth, drawHeight);
+      ctx.globalAlpha = 1;
+
+      const overlay = ctx.createLinearGradient(0, 0, width, height);
+      overlay.addColorStop(0, "rgba(12, 20, 52, 0.35)");
+      overlay.addColorStop(0.5, "rgba(12, 20, 52, 0.25)");
+      overlay.addColorStop(1, "rgba(12, 20, 52, 0.40)");
+
+      ctx.fillStyle = overlay;
+      ctx.fillRect(0, 0, width, height);
+      ctx.restore();
     }
 
     ctx.strokeStyle = "rgba(255, 232, 178, 0.7)";
@@ -542,52 +518,19 @@
     ctx.fillText(card.number, 652, 58);
 
     ctx.textAlign = "center";
-
-    // --- วัดความสูงของข้อความก่อน แล้วจัดให้อยู่กึ่งกลางการ์ด ---
-    const sz = canvasSizes(card);
-    const MAXW = 540;
-
-    ctx.font = `italic ${sz.en}px ${SERIF}`;
-    const enLines = wrapLines(ctx, card.title, MAXW);
-    const enLH = sz.en * 1.28;
-
-    ctx.font = `600 ${sz.th}px ${THAI}`;
-    const thLines = wrapLines(ctx, card.message, MAXW);
-    const thLH = sz.th * 1.7;
-
-    ctx.font = `bold 17px ${SANS}`;
-    const srcLines = wrapLines(ctx, card.source.toUpperCase(), MAXW);
-    const srcLH = 26;
-    const srcTop = 860 - (srcLines.length - 1) * srcLH;
-
-    const total =
-      sz.ic + 22 + 44 + enLines.length * enLH + 22 + thLines.length * thLH;
-    const region = srcTop - 30 - 100;
-    let y = 100 + Math.max(0, (region - total) / 2);
-
-    ctx.font = `${sz.ic}px ${SERIF}`;
-    fillCentered(ctx, card.icon, 350, y + sz.ic * 0.85);
-    y += sz.ic + 22;
+    ctx.font = `100px ${SERIF}`;
+    ctx.fillText(card.icon, 350, 330);
 
     ctx.font = `bold 19px ${SANS}`;
-    fillCentered(ctx, card.label, 350, y + 14);
-    y += 44;
+    ctx.fillText(card.label, 350, 405);
 
-    ctx.font = `italic ${sz.en}px ${SERIF}`;
-    enLines.forEach((line, i) =>
-      fillCentered(ctx, line, 350, y + sz.en * 0.9 + i * enLH),
-    );
-    y += enLines.length * enLH + 22;
+    ctx.font = `bold 48px ${SERIF}`;
+    card.title.split("\n").forEach((line, i) => {
+      ctx.fillText(line, 350, 485 + i * 57);
+    });
 
-    ctx.font = `600 ${sz.th}px ${THAI}`;
-    thLines.forEach((line, i) =>
-      fillCentered(ctx, line, 350, y + sz.th * 0.9 + i * thLH),
-    );
-
-    ctx.font = `bold 17px ${SANS}`;
-    srcLines.forEach((line, i) =>
-      fillCentered(ctx, line, 350, srcTop + i * srcLH),
-    );
+    ctx.font = `600 22px ${THAI}`;
+    wrapText(ctx, card.message, 350, 635, 520, 38);
     shadowOff();
 
     ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
@@ -656,15 +599,16 @@
 
   function closeSaveSheet() {
     if (!activeSheet) return;
+    URL.revokeObjectURL(activeSheet.url);
     activeSheet.el.remove();
     activeSheet = null;
   }
 
-  // หน้าพรีวิวบนมือถือ: ใช้ data URL (เสถียรกว่า blob URL ในเบราว์เซอร์ในแอป เช่น LINE/IG)
-  // และมีปุ่ม Share ที่เรียกจากการแตะใหม่ (ไม่โดนบล็อกเรื่อง user gesture)
-  function openSaveSheet(dataUrl, blob, fileName) {
+  // In-page preview so phones can long-press to save (no popups to get blocked)
+  function openSaveSheet(blob) {
     closeSaveSheet();
 
+    const url = URL.createObjectURL(blob);
     const sheet = document.createElement("div");
     sheet.className = "save-sheet";
     sheet.setAttribute("role", "dialog");
@@ -672,8 +616,8 @@
     sheet.setAttribute("aria-label", "Your card");
 
     const img = document.createElement("img");
+    img.src = url;
     img.alt = "Your little moment card";
-    img.src = dataUrl;
 
     const hint = document.createElement("p");
     hint.textContent = "แตะค้างที่รูปเพื่อบันทึกลงเครื่องได้เลย ♡";
@@ -688,25 +632,9 @@
       if (event.target === sheet) closeSaveSheet();
     });
 
-    sheet.append(img, hint);
-
-    if (navigator.share && navigator.canShare) {
-      const share = document.createElement("button");
-      share.type = "button";
-      share.className = "secondary-button";
-      share.textContent = "Share / Save ↗";
-      share.addEventListener("click", async () => {
-        const result = await tryShare(blob, fileName);
-        if (result === "done") showToast("Saved! ♡");
-        else if (result === "unsupported")
-          showToast("แตะค้างที่รูปเพื่อบันทึกได้เลย ♡");
-      });
-      sheet.append(share);
-    }
-
-    sheet.append(close);
+    sheet.append(img, hint, close);
     document.body.appendChild(sheet);
-    activeSheet = { el: sheet };
+    activeSheet = { el: sheet, url };
     close.focus({ preventScroll: true });
 
     showToast("แตะค้างที่รูปเพื่อบันทึกได้เลย ♡");
@@ -733,7 +661,15 @@
           .replace(/[^a-z0-9]+/g, "-")}.png`;
 
         if (isMobile) {
-          openSaveSheet(canvas.toDataURL("image/png"), blob, fileName);
+          const result = await tryShare(blob, fileName);
+          if (result === "done") {
+            saveNote.textContent = "Saved! Keep this little moment close. ♡";
+          } else if (result === "cancel") {
+            saveNote.textContent =
+              "Your card is ready to keep. Save it as an image below. ♡";
+          } else {
+            openSaveSheet(blob);
+          }
         } else {
           triggerDownload(blob, fileName);
         }
@@ -748,10 +684,9 @@
     });
   }
 
-  /* ---------- Wishes wall (random order + pagination) ---------- */
+  /* ---------- Wishes wall ---------- */
   function renderWallMessage(text, withButton) {
     wishesWall.replaceChildren();
-    if (pagination) pagination.replaceChildren();
 
     const box = document.createElement("div");
     box.className = "wall-empty";
@@ -777,90 +712,16 @@
     wishesWall.appendChild(box);
   }
 
-  function pageItems(current, total) {
-    if (total <= 5) return Array.from({ length: total }, (_, i) => i + 1);
-    const set = new Set([1, total, current, current - 1, current + 1]);
-    const nums = [...set]
-      .filter((n) => n >= 1 && n <= total)
-      .sort((a, b) => a - b);
-    const out = [];
-    nums.forEach((n, i) => {
-      if (i && n - nums[i - 1] > 1) out.push("…");
-      out.push(n);
-    });
-    return out;
-  }
-
-  function renderPagination(total) {
-    if (!pagination) return;
-    pagination.replaceChildren();
-    if (total <= 1) return;
-
-    const make = (label, page, opts = {}) => {
-      const b = document.createElement("button");
-      b.type = "button";
-      b.className = "page-btn" + (opts.current ? " current" : "");
-      b.textContent = label;
-      b.disabled = !!opts.disabled;
-      if (opts.aria) b.setAttribute("aria-label", opts.aria);
-      if (opts.current) b.setAttribute("aria-current", "page");
-      b.addEventListener("click", () => {
-        wishPage = page;
-        renderWishPage();
-      });
-      return b;
-    };
-
-    pagination.append(
-      make("‹", wishPage - 1, {
-        disabled: wishPage === 1,
-        aria: "Previous page",
-      }),
-    );
-
-    pageItems(wishPage, total).forEach((item) => {
-      if (item === "…") {
-        const gap = document.createElement("span");
-        gap.className = "page-gap";
-        gap.textContent = "…";
-        pagination.append(gap);
-      } else {
-        pagination.append(
-          make(String(item), item, { current: item === wishPage }),
-        );
-      }
-    });
-
-    pagination.append(
-      make("›", wishPage + 1, {
-        disabled: wishPage === total,
-        aria: "Next page",
-      }),
-    );
-  }
-
-  function renderWishPage() {
-    if (!wallReady) return;
-
-    if (!allWishes.length) {
+  function renderWishes(snapshot) {
+    if (snapshot.empty) {
       renderWallMessage("The sky is waiting for its first little wish.", true);
       return;
     }
 
-    const byId = new Map(allWishes.map((w) => [w.id, w]));
-    const totalPages = Math.max(
-      1,
-      Math.ceil(wishOrder.length / WISHES_PER_PAGE),
-    );
-    wishPage = Math.min(Math.max(1, wishPage), totalPages);
-
-    const start = (wishPage - 1) * WISHES_PER_PAGE;
     const fragment = document.createDocumentFragment();
 
-    wishOrder.slice(start, start + WISHES_PER_PAGE).forEach((id) => {
-      const wish = byId.get(id);
-      if (!wish) return;
-
+    snapshot.forEach((doc) => {
+      const wish = doc.data();
       const card = document.createElement("article");
       card.className = "wish-card";
 
@@ -870,11 +731,11 @@
 
       const message = document.createElement("p");
       message.className = "wish-card-message";
-      message.textContent = wish.message;
+      message.textContent = wish.message || "";
 
       const from = document.createElement("div");
       from.className = "wish-card-from";
-      from.textContent = `From. ${wish.from}`;
+      from.textContent = `From. ${wish.from || "Anonymous"}`;
 
       const star = document.createElement("span");
       star.className = "wish-card-star";
@@ -885,43 +746,6 @@
     });
 
     wishesWall.replaceChildren(fragment);
-    renderPagination(totalPages);
-  }
-
-  // สุ่มลำดับใหม่ทุกครั้งที่เข้าหน้านี้ (ไม่ซ้ำกันข้ามหน้า)
-  function reshuffleWishes() {
-    wishOrder = shuffle(allWishes.map((w) => w.id));
-    wishPage = 1;
-    renderWishPage();
-  }
-
-  function onWishesSnapshot(snapshot) {
-    allWishes = [];
-    snapshot.forEach((doc) => {
-      const data = doc.data();
-      allWishes.push({
-        id: doc.id,
-        message: data.message || "",
-        from: data.from || "Anonymous",
-      });
-    });
-    wallReady = true;
-
-    // รักษาลำดับเดิมไว้ ใส่ข้อความใหม่แทรกแบบสุ่ม
-    const known = new Set(allWishes.map((w) => w.id));
-    wishOrder = wishOrder.filter((id) => known.has(id));
-    const inOrder = new Set(wishOrder);
-    allWishes.forEach((w) => {
-      if (!inOrder.has(w.id)) {
-        wishOrder.splice(
-          Math.floor(Math.random() * (wishOrder.length + 1)),
-          0,
-          w.id,
-        );
-      }
-    });
-
-    renderWishPage();
   }
 
   if (wishesWall) {
@@ -932,12 +756,11 @@
       );
     } else {
       try {
-        renderWallMessage("Loading little wishes… ♡", false);
         firestore
           .collection("wishes")
           .orderBy("createdAt", "desc")
           .limit(100)
-          .onSnapshot(onWishesSnapshot, (error) => {
+          .onSnapshot(renderWishes, (error) => {
             console.error("Error fetching wishes:", error);
             renderWallMessage(
               "The wall can't load right now. Please try again in a moment. ♡",
