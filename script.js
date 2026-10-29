@@ -26,11 +26,16 @@
   const pagination = $("pagination");
   const toast = $("toast");
 
+  // Firestore instance is created safely in index.html (null if unavailable)
   const firestore = window.db || null;
 
   const prefersReducedMotion =
     typeof window.matchMedia === "function" &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const isMobile =
+    /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
   const DEFAULT_SAVE_NOTE = "Your card is a little keepsake to take with you.";
   const DEFAULT_WISH_FEEDBACK =
@@ -40,14 +45,16 @@
 
   let currentCard = null;
   let toastTimer;
+  let activeSheet = null;
   let submitting = false;
 
+  // wishes wall state
   let allWishes = [];
   let wishOrder = [];
   let wishPage = 1;
   let wallReady = false;
 
-  /* ---------- Cards ---------- */
+  /* ---------- Cards (88 quotes from cards.js) ---------- */
   const PALETTES = [
     ["#f8e8c8", "#e8b36e", "#9fb0d8"],
     ["#fbe9cf", "#eeaa66", "#7f96c9"],
@@ -63,7 +70,7 @@
     number: `NO. ${String(i + 1).padStart(2, "0")}`,
     icon: ICONS[i % ICONS.length],
     label: "A LITTLE QUOTE",
-    source: `${q[0]} — ${q[1]}`,
+    source: `${q[0]} — ${q[1]}` + (q[4] ? ` ✦ ${q[4]}` : ""),
     title: q[2],
     message: q[3],
     color: PALETTES[i % PALETTES.length],
@@ -75,14 +82,15 @@
       number: "NO. 01",
       icon: "☾",
       label: "A LITTLE QUOTE",
-      source: "My Hero Academia — All Might",
-      title: "You, too, can become a hero.",
-      message: "เธอเองก็สามารถเป็นฮีโร่ได้",
+      source: "DEW ✦ TEE",
+      title: "A little joy finds its way.",
+      message: "ขอให้วันนี้มีเรื่องเล็ก ๆ ที่ทำให้คุณยิ้มได้",
       color: PALETTES[0],
       image: "images/1.JPG",
     });
   }
 
+  // ขนาดตัวอักษรตามความยาวข้อความ (การ์ดบนหน้าเว็บ)
   function cardSizes(card) {
     const L = card.title.length;
     const T = card.message.length;
@@ -93,6 +101,7 @@
     };
   }
 
+  // Warm the image cache after the page has loaded, without blocking first paint
   window.addEventListener("load", () => {
     const idle =
       window.requestIdleCallback || ((fn) => window.setTimeout(fn, 1200));
@@ -105,7 +114,7 @@
     });
   });
 
-  /* ---------- Starfield & Leaf Animation ---------- */
+  /* ---------- Starfield ---------- */
   if (starfield) {
     const count = window.innerWidth < 600 ? 44 : 72;
     const fragment = document.createDocumentFragment();
@@ -122,6 +131,7 @@
     }
     starfield.appendChild(fragment);
 
+    // A few leaves drifting down slowly (skipped for reduced motion)
     if (!prefersReducedMotion) {
       const leafCount = window.innerWidth < 600 ? 5 : 8;
       const leaves = document.createDocumentFragment();
@@ -172,6 +182,7 @@
     }
 
     document.body.appendChild(fragment);
+    // Safety net so sparkles can never pile up in the DOM
     setTimeout(() => created.forEach((el) => el.remove()), 1600);
   }
 
@@ -191,11 +202,13 @@
     return arr;
   }
 
-  /* ---------- Page Navigation ---------- */
+  /* ---------- Page navigation ---------- */
   const pages = Array.from(document.querySelectorAll(".page-view"));
 
   function showPage(name, { scroll = true } = {}) {
     if (!pages.some((page) => page.dataset.page === name)) return;
+
+    closeSaveSheet();
 
     pages.forEach((page) => {
       const active = page.dataset.page === name;
@@ -263,7 +276,7 @@
     letterNext.addEventListener("click", () => showPage("luck"));
   }
 
-  /* ---------- Draw A Card ---------- */
+  /* ---------- Draw a card ---------- */
   function pickCard() {
     const pool =
       currentCard && cards.length > 1
@@ -299,6 +312,7 @@
       emptyCard.hidden = true;
       fortuneCard.hidden = false;
 
+      // Restart the reveal animation
       fortuneCard.style.animation = "none";
       void fortuneCard.offsetWidth;
       fortuneCard.style.animation = "";
@@ -312,7 +326,7 @@
     });
   }
 
-  /* ---------- Save Card Direct Download (No Pop-up) ---------- */
+  /* ---------- Save card as image ---------- */
   const SANS = '"DM Sans", "Noto Sans Thai", sans-serif';
   const THAI = '"Noto Sans Thai", "DM Sans", sans-serif';
   const SERIF = 'Georgia, "Noto Sans Thai", serif';
@@ -326,6 +340,21 @@
     });
   }
 
+  async function ensureFonts(text) {
+    if (!document.fonts || !document.fonts.load) return;
+    try {
+      await withTimeout(
+        Promise.all([
+          document.fonts.load('600 22px "Noto Sans Thai"', text),
+          document.fonts.load('700 18px "DM Sans"'),
+        ]),
+        2500,
+      );
+    } catch (error) {
+      // Fall back to system fonts
+    }
+  }
+
   function roundedRect(ctx, x, y, w, h, r) {
     ctx.beginPath();
     ctx.moveTo(x + r, y);
@@ -336,16 +365,36 @@
     ctx.closePath();
   }
 
+  function drawStar(ctx, x, y, radius) {
+    ctx.beginPath();
+    for (let i = 0; i < 10; i++) {
+      const angle = -Math.PI / 2 + (i * Math.PI) / 5;
+      const r = i % 2 === 0 ? radius : radius * 0.42;
+      const px = x + Math.cos(angle) * r;
+      const py = y + Math.sin(angle) * r;
+      if (i === 0) ctx.moveTo(px, py);
+      else ctx.lineTo(px, py);
+    }
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  // Splits text into wrap-friendly pieces. Thai has no spaces, so use the
+  // browser's word segmenter when available to avoid breaking mid-word.
   function segmentText(text) {
     if (typeof Intl !== "undefined" && typeof Intl.Segmenter === "function") {
       try {
         const segmenter = new Intl.Segmenter("th", { granularity: "word" });
         return Array.from(segmenter.segment(text), (item) => item.segment);
-      } catch (error) {}
+      } catch (error) {
+        // fall through
+      }
     }
     return text.includes(" ") ? text.split(/(?<= )/) : Array.from(text);
   }
 
+  // Draws one line centered on `cx`. Some mobile browsers mis-handle
+  // textAlign="center" for Thai text, so the position is computed manually.
   function fillCentered(ctx, text, cx, y) {
     const previousAlign = ctx.textAlign;
     ctx.textAlign = "left";
@@ -354,6 +403,7 @@
     ctx.textAlign = previousAlign;
   }
 
+  // Splits text into lines that fit maxWidth (uses the current ctx.font)
   function wrapLines(ctx, text, maxWidth) {
     const pieces = segmentText(text);
     const lines = [];
@@ -373,16 +423,29 @@
     return lines;
   }
 
+  function canvasSizes(card) {
+    const L = card.title.length;
+    const T = card.message.length;
+    return {
+      en: L <= 40 ? 46 : L <= 70 ? 38 : L <= 100 ? 32 : 27,
+      th: T <= 40 ? 26 : T <= 70 ? 24 : 21,
+      ic: L > 100 ? 70 : 90,
+    };
+  }
+
   async function renderCardCanvas(card) {
+    await ensureFonts(card.message);
+
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
 
-    const scale = 2;
+    // มือถือใช้ความละเอียดต่ำลงเล็กน้อย เพื่อไม่ให้หน่วยความจำเต็ม
+    const scale = isMobile ? 1.5 : 2;
     const width = 700;
     const height = 980;
 
-    canvas.width = width * scale;
-    canvas.height = height * scale;
+    canvas.width = Math.round(width * scale);
+    canvas.height = Math.round(height * scale);
     ctx.scale(scale, scale);
 
     const [c1, c2, c3] = card.color;
@@ -406,7 +469,8 @@
 
         const imageRatio = photo.width / photo.height;
         const cardRatio = width / height;
-        let drawWidth, drawHeight;
+        let drawWidth;
+        let drawHeight;
 
         if (imageRatio > cardRatio) {
           drawHeight = height;
@@ -433,6 +497,7 @@
         ctx.restore();
       } catch (error) {
         ctx.restore();
+        ctx.globalAlpha = 1;
       }
     }
 
@@ -440,6 +505,18 @@
     ctx.lineWidth = 3;
     roundedRect(ctx, 19, 19, 662, 942, 80);
     ctx.stroke();
+
+    ctx.fillStyle = "rgba(255, 232, 170, 0.85)";
+    [
+      [90, 130],
+      [600, 155],
+      [95, 800],
+      [610, 810],
+      [130, 460],
+      [570, 510],
+      [350, 90],
+      [350, 875],
+    ].forEach(([x, y], i) => drawStar(ctx, x, y, i % 2 ? 8 : 11));
 
     const shadowOn = () => {
       ctx.shadowColor = "rgba(0, 0, 0, 0.8)";
@@ -453,7 +530,9 @@
     };
 
     shadowOn();
+    ctx.textBaseline = "alphabetic";
     ctx.fillStyle = "#ffffff";
+
     ctx.textAlign = "left";
     ctx.font = `bold 18px ${SANS}`;
     ctx.fillText("A LITTLE MOMENT", 48, 58);
@@ -463,27 +542,52 @@
     ctx.fillText(card.number, 652, 58);
 
     ctx.textAlign = "center";
+
+    // --- วัดความสูงของข้อความก่อน แล้วจัดให้อยู่กึ่งกลางการ์ด ---
+    const sz = canvasSizes(card);
     const MAXW = 540;
 
-    ctx.font = `700 80px ${SERIF}`;
-    fillCentered(ctx, card.icon, 350, 180);
-
-    ctx.font = `bold 19px ${SANS}`;
-    fillCentered(ctx, card.label, 350, 224);
-
-    ctx.font = `italic 36px ${SERIF}`;
+    ctx.font = `italic ${sz.en}px ${SERIF}`;
     const enLines = wrapLines(ctx, card.title, MAXW);
-    enLines.forEach((line, i) => fillCentered(ctx, line, 350, 280 + i * 44));
+    const enLH = sz.en * 1.28;
 
-    let nextY = 280 + enLines.length * 44 + 20;
-    ctx.font = `600 24px ${THAI}`;
+    ctx.font = `600 ${sz.th}px ${THAI}`;
     const thLines = wrapLines(ctx, card.message, MAXW);
-    thLines.forEach((line, i) => fillCentered(ctx, line, 350, nextY + i * 38));
+    const thLH = sz.th * 1.7;
 
     ctx.font = `bold 17px ${SANS}`;
     const srcLines = wrapLines(ctx, card.source.toUpperCase(), MAXW);
-    srcLines.forEach((line, i) => fillCentered(ctx, line, 350, 840 + i * 26));
+    const srcLH = 26;
+    const srcTop = 860 - (srcLines.length - 1) * srcLH;
 
+    const total =
+      sz.ic + 22 + 44 + enLines.length * enLH + 22 + thLines.length * thLH;
+    const region = srcTop - 30 - 100;
+    let y = 100 + Math.max(0, (region - total) / 2);
+
+    ctx.font = `${sz.ic}px ${SERIF}`;
+    fillCentered(ctx, card.icon, 350, y + sz.ic * 0.85);
+    y += sz.ic + 22;
+
+    ctx.font = `bold 19px ${SANS}`;
+    fillCentered(ctx, card.label, 350, y + 14);
+    y += 44;
+
+    ctx.font = `italic ${sz.en}px ${SERIF}`;
+    enLines.forEach((line, i) =>
+      fillCentered(ctx, line, 350, y + sz.en * 0.9 + i * enLH),
+    );
+    y += enLines.length * enLH + 22;
+
+    ctx.font = `600 ${sz.th}px ${THAI}`;
+    thLines.forEach((line, i) =>
+      fillCentered(ctx, line, 350, y + sz.th * 0.9 + i * thLH),
+    );
+
+    ctx.font = `bold 17px ${SANS}`;
+    srcLines.forEach((line, i) =>
+      fillCentered(ctx, line, 350, srcTop + i * srcLH),
+    );
     shadowOff();
 
     ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
@@ -506,6 +610,19 @@
     return canvas;
   }
 
+  function canvasToBlob(canvas) {
+    return new Promise((resolve, reject) => {
+      try {
+        canvas.toBlob((blob) => {
+          if (blob) resolve(blob);
+          else reject(new Error("Empty image"));
+        }, "image/png");
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
   function triggerDownload(blob, filename) {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -516,9 +633,89 @@
     document.body.removeChild(link);
     setTimeout(() => URL.revokeObjectURL(url), 10000);
 
-    showToast("บันทึกการ์ดลงเครื่องแล้ว ♡");
-    saveNote.textContent = "Saved to your device! ♡";
+    showToast("Your little keepsake is saved. ♡");
+    saveNote.textContent = "Saved! Keep this little moment close. ♡";
   }
+
+  // Returns "done", "cancel" or "unsupported"
+  async function tryShare(blob, filename) {
+    try {
+      if (!navigator.share || !navigator.canShare) return "unsupported";
+      const file = new File([blob], filename, { type: "image/png" });
+      if (!navigator.canShare({ files: [file] })) return "unsupported";
+      await navigator.share({
+        files: [file],
+        title: "A Little Moment for You",
+      });
+      return "done";
+    } catch (error) {
+      if (error && error.name === "AbortError") return "cancel";
+      return "unsupported";
+    }
+  }
+
+  function closeSaveSheet() {
+    if (!activeSheet) return;
+    activeSheet.el.remove();
+    activeSheet = null;
+  }
+
+  // หน้าพรีวิวบนมือถือ: ใช้ data URL (เสถียรกว่า blob URL ในเบราว์เซอร์ในแอป เช่น LINE/IG)
+  // และมีปุ่ม Share ที่เรียกจากการแตะใหม่ (ไม่โดนบล็อกเรื่อง user gesture)
+  function openSaveSheet(dataUrl, blob, fileName) {
+    closeSaveSheet();
+
+    const sheet = document.createElement("div");
+    sheet.className = "save-sheet";
+    sheet.setAttribute("role", "dialog");
+    sheet.setAttribute("aria-modal", "true");
+    sheet.setAttribute("aria-label", "Your card");
+
+    const img = document.createElement("img");
+    img.alt = "Your little moment card";
+    img.src = dataUrl;
+
+    const hint = document.createElement("p");
+    hint.textContent = "แตะค้างที่รูปเพื่อบันทึกลงเครื่องได้เลย ♡";
+
+    const close = document.createElement("button");
+    close.type = "button";
+    close.className = "primary-button";
+    close.textContent = "Close";
+    close.addEventListener("click", closeSaveSheet);
+
+    sheet.addEventListener("click", (event) => {
+      if (event.target === sheet) closeSaveSheet();
+    });
+
+    sheet.append(img, hint);
+
+    if (navigator.share && navigator.canShare) {
+      const share = document.createElement("button");
+      share.type = "button";
+      share.className = "secondary-button";
+      share.textContent = "Share / Save ↗";
+      share.addEventListener("click", async () => {
+        const result = await tryShare(blob, fileName);
+        if (result === "done") showToast("Saved! ♡");
+        else if (result === "unsupported")
+          showToast("แตะค้างที่รูปเพื่อบันทึกได้เลย ♡");
+      });
+      sheet.append(share);
+    }
+
+    sheet.append(close);
+    document.body.appendChild(sheet);
+    activeSheet = { el: sheet };
+    close.focus({ preventScroll: true });
+
+    showToast("แตะค้างที่รูปเพื่อบันทึกได้เลย ♡");
+    saveNote.textContent = "แตะค้างที่รูปเพื่อบันทึกลงเครื่องได้เลยครับ ♡";
+  }
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closeSaveSheet();
+  });
 
   if (saveCardButton) {
     saveCardButton.addEventListener("click", async () => {
@@ -530,26 +727,28 @@
 
       try {
         const canvas = await renderCardCanvas(card);
-        canvas.toBlob((blob) => {
-          if (blob) {
-            const fileName = `a-little-moment-${card.number
-              .toLowerCase()
-              .replace(/[^a-z0-9]+/g, "-")}.png`;
-            triggerDownload(blob, fileName);
-          } else {
-            showToast("Could not save the card. Please try again. ♡");
-          }
-        }, "image/png");
+        const blob = await canvasToBlob(canvas);
+        const fileName = `a-little-moment-${card.number
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")}.png`;
+
+        if (isMobile) {
+          openSaveSheet(canvas.toDataURL("image/png"), blob, fileName);
+        } else {
+          triggerDownload(blob, fileName);
+        }
       } catch (error) {
         console.error("Could not save card:", error);
         showToast("Could not save the card. Please try again. ♡");
+        saveNote.textContent =
+          "Your card is ready to keep. Save it as an image below. ♡";
       } finally {
         saveCardButton.disabled = !currentCard;
       }
     });
   }
 
-  /* ---------- Wishes Wall ---------- */
+  /* ---------- Wishes wall (random order + pagination) ---------- */
   function renderWallMessage(text, withButton) {
     wishesWall.replaceChildren();
     if (pagination) pagination.replaceChildren();
@@ -689,6 +888,7 @@
     renderPagination(totalPages);
   }
 
+  // สุ่มลำดับใหม่ทุกครั้งที่เข้าหน้านี้ (ไม่ซ้ำกันข้ามหน้า)
   function reshuffleWishes() {
     wishOrder = shuffle(allWishes.map((w) => w.id));
     wishPage = 1;
@@ -707,6 +907,7 @@
     });
     wallReady = true;
 
+    // รักษาลำดับเดิมไว้ ใส่ข้อความใหม่แทรกแบบสุ่ม
     const known = new Set(allWishes.map((w) => w.id));
     wishOrder = wishOrder.filter((id) => known.has(id));
     const inOrder = new Set(wishOrder);
@@ -753,7 +954,7 @@
     }
   }
 
-  /* ---------- Wish Form ---------- */
+  /* ---------- Wish form ---------- */
   if (wishMessage) {
     wishMessage.addEventListener("input", () => {
       characterCount.textContent = `${wishMessage.value.length} / 500`;
@@ -822,5 +1023,6 @@
     });
   }
 
+  /* ---------- Start ---------- */
   showPage("letter", { scroll: false });
 })();
