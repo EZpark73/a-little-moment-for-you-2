@@ -1229,16 +1229,33 @@
 
     const titleEl = $("cardTitle");
     titleEl.replaceChildren();
+
     card.title.split("\n").forEach((line, index) => {
-      if (index) titleEl.appendChild(document.createElement("br"));
+      if (index) {
+        titleEl.appendChild(document.createElement("br"));
+      }
+
       titleEl.appendChild(document.createTextNode(line));
     });
 
     $("cardMessage").textContent = card.message;
 
+    // แสดงชื่ออนิเมะและชื่อตัวละคร
+    const cardSource = $("cardSource");
+
+    if (cardSource) {
+      const anime = card.anime || "";
+      const character = card.character || "";
+
+      cardSource.textContent = [anime, character].filter(Boolean).join(" · ");
+
+      cardSource.hidden = !cardSource.textContent;
+    }
+
     fortuneCard.style.background =
       `linear-gradient(155deg, ${card.color[0]} 0%, ` +
       `${card.color[1]} 48%, ${card.color[2]} 100%)`;
+
     fortuneCard.style.setProperty("--card-photo", `url("${card.image}")`);
   }
 
