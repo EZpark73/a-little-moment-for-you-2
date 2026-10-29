@@ -1675,7 +1675,7 @@ body::after {
     linear-gradient(90deg, #1c1008, #4d2e16 50%, #1c1008) 100% 0 /
       clamp(12px, 3.4vw, 44px) 100% no-repeat,
     /* เสาไม้ซ้าย */ linear-gradient(90deg, #1c1008, #3f2512 50%, #1c1008) 0 0 /
-      clamp(8px, 2vw, 26px) 100% no-repeat,
+      clamp(12px, 3.4vw, 44px) 100% no-repeat,
     /* หน้าต่างเห็นท้องฟ้ากลางคืน */
     linear-gradient(180deg, #07102c, #1f2f6e 70%, #3a4a8c) 0 36% /
       clamp(26px, 7vw, 100px) 26% no-repeat,
