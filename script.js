@@ -46,6 +46,16 @@
   let submitting = false;
 
   /* ---------- Cards ---------- */
+  // 6 color palettes, reused by the cards below (C[0] ... C[5])
+  const C = [
+    ["#f8e8c8", "#e8b36e", "#9fb0d8"],
+    ["#fbe9cf", "#eeaa66", "#7f96c9"],
+    ["#f6dcc0", "#d98c57", "#b8c3e3"],
+    ["#f3e4c4", "#cfa76a", "#8fa6d1"],
+    ["#fff0d2", "#f0bf6e", "#a9b8dc"],
+    ["#f4dcc2", "#dd9a62", "#8c9fcf"],
+  ];
+
   const cards = [
     {
       number: "NO. 01",
@@ -55,7 +65,7 @@
       message: "เธอเองก็สามารถเป็นฮีโร่ได้",
       anime: "My Hero Academia",
       character: "All Might",
-      color: ["#f8e8c8", "#e8b36e", "#9fb0d8"],
+      color: C[0],
       image: "images/1.JPG",
     },
     {
@@ -66,7 +76,7 @@
       message: "อย่าปล่อยให้โชคชะตามาเป็นคนกำหนดชีวิตของเรา",
       anime: "Naruto",
       character: "Naruto Uzumaki",
-      color: ["#fbe9cf", "#eeaa66", "#7f96c9"],
+      color: C[1],
       image: "images/2.JPG",
     },
     {
@@ -77,7 +87,7 @@
       message: "แม้จะยังไม่เก่งพอ ฉันก็จะพยายามต่อไป",
       anime: "Naruto",
       character: "Hinata Hyuga",
-      color: ["#f6dcc0", "#d98c57", "#b8c3e3"],
+      color: C[2],
       image: "images/3.JPG",
     },
     {
@@ -88,7 +98,7 @@
       message: "ความฝันของฉัน ฉันจะเป็นคนตัดสินใจเอง",
       anime: "One Piece",
       character: "Monkey D. Luffy",
-      color: ["#f3e4c4", "#cfa76a", "#8fa6d1"],
+      color: C[3],
       image: "images/4.JPG",
     },
     {
@@ -99,7 +109,7 @@
       message: "คนเรายังคงมีชีวิตอยู่ได้ในความทรงจำของคนอื่น",
       anime: "One Piece",
       character: "Dr. Hiriluk",
-      color: ["#fff0d2", "#f0bf6e", "#a9b8dc"],
+      color: C[4],
       image: "images/5.JPG",
     },
     {
@@ -110,7 +120,7 @@
       message: "แม้โลกจะโหดร้าย เราก็ยังเลือกที่จะอ่อนโยนได้",
       anime: "Demon Slayer",
       character: "Tanjiro Kamado",
-      color: ["#f4dcc2", "#dd9a62", "#8c9fcf"],
+      color: C[5],
       image: "images/6.JPG",
     },
     {
@@ -121,7 +131,7 @@
       message: "การกลัวไม่ได้หมายความว่าเราจะก้าวต่อไปไม่ได้",
       anime: "Demon Slayer",
       character: "Zenitsu Agatsuma",
-      color: ["#f8e8c8", "#e8b36e", "#9fb0d8"],
+      color: C[0],
       image: "images/1.JPG",
     },
     {
@@ -132,7 +142,7 @@
       message: "ความรักและความผูกพันทำให้เรายังมีกำลังใจ",
       anime: "Demon Slayer",
       character: "Nezuko Kamado",
-      color: ["#fbe9cf", "#eeaa66", "#7f96c9"],
+      color: C[1],
       image: "images/2.JPG",
     },
     {
@@ -143,7 +153,7 @@
       message: "ส่วนสูงไม่ใช่สิ่งเดียวที่กำหนดว่าเราจะไปได้ไกลแค่ไหน",
       anime: "Haikyu!!",
       character: "Shoyo Hinata",
-      color: ["#f6dcc0", "#d98c57", "#b8c3e3"],
+      color: C[2],
       image: "images/3.JPG",
     },
     {
@@ -154,7 +164,7 @@
       message: "เมื่อเราพบสิ่งที่อยากทำจริง ๆ เราอาจทุ่มเทได้มากกว่าที่คิด",
       anime: "Haikyu!!",
       character: "Kei Tsukishima",
-      color: ["#f3e4c4", "#cfa76a", "#8fa6d1"],
+      color: C[3],
       image: "images/4.JPG",
     },
     {
@@ -165,7 +175,7 @@
       message: "การเริ่มต้นจากศูนย์ไม่ได้แปลว่าเราจะไปไม่ถึงฝัน",
       anime: "Slam Dunk",
       character: "Hanamichi Sakuragi",
-      color: ["#fff0d2", "#f0bf6e", "#a9b8dc"],
+      color: C[4],
       image: "images/5.JPG",
     },
     {
@@ -176,7 +186,7 @@
       message: "ความผิดพลาดทำให้เราได้เรียนรู้คุณค่าของสิ่งที่มี",
       anime: "Fullmetal Alchemist: Brotherhood",
       character: "Edward Elric",
-      color: ["#f4dcc2", "#dd9a62", "#8c9fcf"],
+      color: C[5],
       image: "images/6.JPG",
     },
     {
@@ -187,7 +197,7 @@
       message: "คุณค่าของคนไม่ได้ขึ้นอยู่กับรูปลักษณ์ภายนอก",
       anime: "Fullmetal Alchemist: Brotherhood",
       character: "Alphonse Elric",
-      color: ["#f8e8c8", "#e8b36e", "#9fb0d8"],
+      color: C[0],
       image: "images/1.JPG",
     },
     {
@@ -198,7 +208,7 @@
       message: "ความเข้มแข็งไม่ได้หมายถึงการไม่เคยเจ็บปวด",
       anime: "Fairy Tail",
       character: "Erza Scarlet",
-      color: ["#fbe9cf", "#eeaa66", "#7f96c9"],
+      color: C[1],
       image: "images/2.JPG",
     },
     {
@@ -209,7 +219,7 @@
       message: "โลกใบนี้ยังมีสิ่งอีกมากมายที่รอให้เราออกไปค้นพบ",
       anime: "Hunter × Hunter",
       character: "Gon Freecss",
-      color: ["#f6dcc0", "#d98c57", "#b8c3e3"],
+      color: C[2],
       image: "images/3.JPG",
     },
     {
@@ -220,7 +230,7 @@
       message: "การมีใครสักคนที่เราอยากปกป้อง ทำให้ชีวิตมีความหมาย",
       anime: "Hunter × Hunter",
       character: "Killua Zoldyck",
-      color: ["#f3e4c4", "#cfa76a", "#8fa6d1"],
+      color: C[3],
       image: "images/4.JPG",
     },
     {
@@ -231,7 +241,7 @@
       message: "บางครั้งเราก็เพิ่งเข้าใจคุณค่าของใครบางคนเมื่อเวลาผ่านไป",
       anime: "Frieren: Beyond Journey's End",
       character: "Frieren",
-      color: ["#fff0d2", "#f0bf6e", "#a9b8dc"],
+      color: C[4],
       image: "images/5.JPG",
     },
     {
@@ -242,7 +252,7 @@
       message: "แม้จะจำไม่ได้ทั้งหมด แต่ความรู้สึกบางอย่างก็ยังคงอยู่",
       anime: "Your Name.",
       character: "Mitsuha Miyamizu",
-      color: ["#f4dcc2", "#dd9a62", "#8c9fcf"],
+      color: C[5],
       image: "images/6.JPG",
     },
     {
@@ -253,7 +263,7 @@
       message: "การเติบโตคือการค่อย ๆ เรียนรู้ที่จะเชื่อมั่นในตัวเอง",
       anime: "Kiki's Delivery Service",
       character: "Kiki",
-      color: ["#f8e8c8", "#e8b36e", "#9fb0d8"],
+      color: C[0],
       image: "images/1.JPG",
     },
     {
@@ -264,7 +274,7 @@
       message: "จงเป็นเจ้าของการตัดสินใจในชีวิตตัวเอง",
       anime: "Samurai Champloo",
       character: "Mugen",
-      color: ["#fbe9cf", "#eeaa66", "#7f96c9"],
+      color: C[1],
       image: "images/2.JPG",
     },
     {
@@ -275,7 +285,7 @@
       message: "ทุกคนมีวิธีเติบโตเป็นตัวเองในแบบที่แตกต่างกัน",
       anime: "Assassination Classroom",
       character: "Koro-sensei",
-      color: ["#f6dcc0", "#d98c57", "#b8c3e3"],
+      color: C[2],
       image: "images/3.JPG",
     },
     {
@@ -286,7 +296,7 @@
       message: "จงเชื่อมั่นในตัวเองและก้าวข้ามขีดจำกัดที่ตั้งไว้",
       anime: "Gurren Lagann",
       character: "Kamina",
-      color: ["#f3e4c4", "#cfa76a", "#8fa6d1"],
+      color: C[3],
       image: "images/4.JPG",
     },
     {
@@ -297,7 +307,7 @@
       message: "พลังพิเศษไม่ได้ทำให้ใครมีคุณค่ามากกว่าคนอื่น",
       anime: "Mob Psycho 100",
       character: "Shigeo Kageyama",
-      color: ["#fff0d2", "#f0bf6e", "#a9b8dc"],
+      color: C[4],
       image: "images/5.JPG",
     },
     {
@@ -308,7 +318,7 @@
       message: "บางครั้งเราต้องลองทำสิ่งใหม่ จึงจะค้นพบสิ่งที่รัก",
       anime: "Blue Period",
       character: "Yatora Yaguchi",
-      color: ["#f4dcc2", "#dd9a62", "#8c9fcf"],
+      color: C[5],
       image: "images/6.JPG",
     },
     {
@@ -319,7 +329,7 @@
       message: "ไม่จำเป็นต้องเหมือนใคร เราก็สามารถเดินไปในเส้นทางของตัวเอง",
       anime: "Mashle",
       character: "Mash Burnedead",
-      color: ["#f8e8c8", "#e8b36e", "#9fb0d8"],
+      color: C[0],
       image: "images/1.JPG",
     },
     {
@@ -330,7 +340,7 @@
       message: "การเริ่มต้นใหม่ไม่เคยสายเกินไป หากเรายังไม่ยอมแพ้",
       anime: "Kaiju No. 8",
       character: "Kafka Hibino",
-      color: ["#fbe9cf", "#eeaa66", "#7f96c9"],
+      color: C[1],
       image: "images/2.JPG",
     },
     {
@@ -342,7 +352,7 @@
         "แม้เธอจะมองไม่เห็นข้อดีของตัวเองในตอนนี้ ก็ไม่ได้แปลว่ามันไม่มีอยู่จริง",
       anime: "Re:Zero",
       character: "Rem",
-      color: ["#f6dcc0", "#d98c57", "#b8c3e3"],
+      color: C[2],
       image: "images/3.JPG",
     },
     {
@@ -353,7 +363,7 @@
       message: "อย่าปล่อยให้คนอื่นเป็นผู้กำหนดคุณค่าของเรา",
       anime: "Gachiakuta",
       character: "Rudo",
-      color: ["#f3e4c4", "#cfa76a", "#8fa6d1"],
+      color: C[3],
       image: "images/4.JPG",
     },
     {
@@ -364,7 +374,7 @@
       message: "แม้ชีวิตจะวุ่นวาย เราก็ยังต้องรักษาสิ่งสำคัญของตัวเอง",
       anime: "Gintama",
       character: "Gintoki Sakata",
-      color: ["#fff0d2", "#f0bf6e", "#a9b8dc"],
+      color: C[4],
       image: "images/5.JPG",
     },
     {
@@ -375,7 +385,7 @@
       message: "การแตกต่างจากคนอื่นไม่ได้หมายความว่าเราผิดปกติ",
       anime: "The Disastrous Life of Saiki K.",
       character: "Kusuo Saiki",
-      color: ["#f4dcc2", "#dd9a62", "#8c9fcf"],
+      color: C[5],
       image: "images/6.JPG",
     },
     {
@@ -386,7 +396,7 @@
       message: "อดีตที่เจ็บปวดไม่จำเป็นต้องเป็นตัวกำหนดอนาคตทั้งหมด",
       anime: "Bungo Stray Dogs",
       character: "Atsushi Nakajima",
-      color: ["#f8e8c8", "#e8b36e", "#9fb0d8"],
+      color: C[0],
       image: "images/1.JPG",
     },
     {
@@ -397,7 +407,7 @@
       message: "ความสุขธรรมดาอาจเป็นสิ่งที่มีค่ามากที่สุด",
       anime: "Chainsaw Man",
       character: "Denji",
-      color: ["#fbe9cf", "#eeaa66", "#7f96c9"],
+      color: C[1],
       image: "images/2.JPG",
     },
     {
@@ -408,7 +418,7 @@
       message: "การเดินทางสำคัญไม่แพ้เป้าหมายที่เราอยากไปให้ถึง",
       anime: "Pokémon",
       character: "Ash Ketchum",
-      color: ["#f6dcc0", "#d98c57", "#b8c3e3"],
+      color: C[2],
       image: "images/3.JPG",
     },
     {
@@ -419,7 +429,7 @@
       message: "แม้จะไม่รู้ว่าตัวเองเป็นใคร เราก็ยังเลือกเส้นทางของตัวเองได้",
       anime: "Tougen Anki",
       character: "Shiki Ichinose",
-      color: ["#f3e4c4", "#cfa76a", "#8fa6d1"],
+      color: C[3],
       image: "images/4.JPG",
     },
     {
@@ -430,7 +440,7 @@
       message: "บางครั้งการจากลาอย่างเข้าใจช่วยให้หัวใจได้ก้าวต่อไป",
       anime: "Dandelion",
       character: "Main Character",
-      color: ["#fff0d2", "#f0bf6e", "#a9b8dc"],
+      color: C[4],
       image: "images/5.JPG",
     },
     {
@@ -441,7 +451,7 @@
       message: "แม้ไม่มีพรสวรรค์ เราก็ยังพยายามไปให้ถึงความฝันได้",
       anime: "Black Clover",
       character: "Asta",
-      color: ["#f4dcc2", "#dd9a62", "#8c9fcf"],
+      color: C[5],
       image: "images/6.JPG",
     },
     {
@@ -452,7 +462,7 @@
       message: "เราไม่จำเป็นต้องเดินตามเส้นทางที่คนอื่นกำหนดให้",
       anime: "My Hero Academia",
       character: "Shoto Todoroki",
-      color: ["#f8e8c8", "#e8b36e", "#9fb0d8"],
+      color: C[0],
       image: "images/1.JPG",
     },
     {
@@ -463,7 +473,7 @@
       message: "ความพยายามสามารถพาเราไปไกลกว่าที่ใครคาดคิด",
       anime: "Naruto",
       character: "Rock Lee",
-      color: ["#fbe9cf", "#eeaa66", "#7f96c9"],
+      color: C[1],
       image: "images/2.JPG",
     },
     {
@@ -474,7 +484,7 @@
       message: "ความทรงจำที่สร้างร่วมกันทำให้ความสัมพันธ์มีความหมาย",
       anime: "Fairy Tail",
       character: "Lucy Heartfilia",
-      color: ["#f6dcc0", "#d98c57", "#b8c3e3"],
+      color: C[2],
       image: "images/3.JPG",
     },
     {
@@ -485,7 +495,7 @@
       message: "ความเจ็บปวดไม่ควรเป็นสิ่งเดียวที่กำหนดชีวิตของเรา",
       anime: "Hunter × Hunter",
       character: "Kurapika",
-      color: ["#f3e4c4", "#cfa76a", "#8fa6d1"],
+      color: C[3],
       image: "images/4.JPG",
     },
     {
@@ -496,7 +506,7 @@
       message: "สิ่งดี ๆ ที่เราทำให้ผู้อื่นอาจคงอยู่ในความทรงจำไปอีกนาน",
       anime: "Frieren: Beyond Journey's End",
       character: "Himmel",
-      color: ["#fff0d2", "#f0bf6e", "#a9b8dc"],
+      color: C[4],
       image: "images/5.JPG",
     },
     {
@@ -507,7 +517,7 @@
       message: "แม้จะหลงทาง เราก็ยังสามารถค้นหาตัวเองอีกครั้ง",
       anime: "Spirited Away",
       character: "Haku",
-      color: ["#f4dcc2", "#dd9a62", "#8c9fcf"],
+      color: C[5],
       image: "images/6.JPG",
     },
     {
@@ -519,7 +529,7 @@
         "แม้เส้นทางจะเต็มไปด้วยความไม่แน่นอน ความหวังก็ยังทำให้เราก้าวต่อไปได้",
       anime: "Steins;Gate",
       character: "Rintaro Okabe",
-      color: ["#f8e8c8", "#e8b36e", "#9fb0d8"],
+      color: C[0],
       image: "images/1.JPG",
     },
     {
@@ -530,7 +540,7 @@
       message: "สิ่งที่เราเห็นจากภายนอกอาจไม่ใช่ทั้งหมดของใครสักคน",
       anime: "The Apothecary Diaries",
       character: "Jinshi",
-      color: ["#fbe9cf", "#eeaa66", "#7f96c9"],
+      color: C[1],
       image: "images/2.JPG",
     },
     {
@@ -541,7 +551,7 @@
       message: "การเปลี่ยนแปลงเริ่มขึ้นเมื่อเรากล้าก้าวออกจากจุดเดิม",
       anime: "Solo Leveling",
       character: "Sung Jinwoo",
-      color: ["#f6dcc0", "#d98c57", "#b8c3e3"],
+      color: C[2],
       image: "images/3.JPG",
     },
     {
@@ -552,7 +562,7 @@
       message: "ความฝันต้องการทั้งความสามารถ ความอดทน และความพยายาม",
       anime: "Black Clover",
       character: "Yuno",
-      color: ["#f3e4c4", "#cfa76a", "#8fa6d1"],
+      color: C[3],
       image: "images/4.JPG",
     },
     {
@@ -563,7 +573,7 @@
       message: "การมีเพื่อนร่วมทางทำให้การเดินทางมีความหมายมากขึ้น — Secret",
       anime: "Pokémon",
       character: "Pikachu",
-      color: ["#fff0d2", "#f0bf6e", "#a9b8dc"],
+      color: C[4],
       image: "images/5.JPG",
     },
     {
@@ -574,7 +584,7 @@
       message: "ชีวิตมีความหมายผ่านสิ่งที่เราเชื่อมั่น",
       anime: "Naruto",
       character: "Itachi Uchiha",
-      color: ["#f4dcc2", "#dd9a62", "#8c9fcf"],
+      color: C[5],
       image: "images/6.JPG",
     },
     {
@@ -585,7 +595,7 @@
       message: "การล้มไม่ใช่เรื่องน่าอายเท่ากับการไม่ยอมลุกขึ้น",
       anime: "Kuroko's Basketball",
       character: "Shintaro Midorima",
-      color: ["#f8e8c8", "#e8b36e", "#9fb0d8"],
+      color: C[0],
       image: "images/1.JPG",
     },
     {
@@ -596,7 +606,7 @@
       message: "มิตรภาพทำให้เราได้ค้นพบตัวเองในมุมใหม่",
       anime: "Hunter × Hunter",
       character: "Killua Zoldyck",
-      color: ["#fbe9cf", "#eeaa66", "#7f96c9"],
+      color: C[1],
       image: "images/2.JPG",
     },
     {
@@ -608,7 +618,7 @@
         "ชีวิตมีคุณค่าเพราะเราได้สัมผัสทั้งความสุข ความเศร้า และการเปลี่ยนแปลง",
       anime: "The Tale of the Princess Kaguya",
       character: "Princess Kaguya",
-      color: ["#f6dcc0", "#d98c57", "#b8c3e3"],
+      color: C[2],
       image: "images/3.JPG",
     },
     {
@@ -619,7 +629,7 @@
       message: "ความสุขเล็ก ๆ รอบตัวมีคุณค่าโดยไม่ต้องพยายามให้ยิ่งใหญ่",
       anime: "Barakamon",
       character: "Naru Kotoishi",
-      color: ["#f3e4c4", "#cfa76a", "#8fa6d1"],
+      color: C[3],
       image: "images/4.JPG",
     },
     {
@@ -630,7 +640,7 @@
       message: "ความฝันอาจมีอุปสรรค แต่ก็ยังมีความหมายที่จะพยายาม",
       anime: "The Wind Rises",
       character: "Jiro Horikoshi",
-      color: ["#fff0d2", "#f0bf6e", "#a9b8dc"],
+      color: C[4],
       image: "images/5.JPG",
     },
     {
@@ -641,7 +651,7 @@
       message: "การเดินทางของแต่ละคนมีจังหวะและระยะทางต่างกัน",
       anime: "Run with the Wind",
       character: "Kakeru Kurahara",
-      color: ["#f4dcc2", "#dd9a62", "#8c9fcf"],
+      color: C[5],
       image: "images/6.JPG",
     },
     {
@@ -653,7 +663,7 @@
         "อย่ากลัวที่จะเป็นตัวเอง เพียงเพราะเส้นทางของเราแตกต่างจากคนอื่น",
       anime: "Blue Lock",
       character: "Meguru Bachira",
-      color: ["#f8e8c8", "#e8b36e", "#9fb0d8"],
+      color: C[0],
       image: "images/1.JPG",
     },
     {
@@ -665,7 +675,7 @@
         "แม้จะมองไม่เห็นทางออก การกล้าคิดหาความเป็นไปได้ใหม่ ๆ ก็อาจเปลี่ยนทุกอย่างได้",
       anime: "Attack on Titan",
       character: "Armin Arlert",
-      color: ["#fbe9cf", "#eeaa66", "#7f96c9"],
+      color: C[1],
       image: "images/2.JPG",
     },
     {
@@ -676,7 +686,7 @@
       message: "อย่าปล่อยให้ความแตกต่างทำให้เราลืมมองเห็นหัวใจของกันและกัน",
       anime: "86",
       character: "Vladilena Milizé",
-      color: ["#f6dcc0", "#d98c57", "#b8c3e3"],
+      color: C[2],
       image: "images/3.JPG",
     },
     {
@@ -688,7 +698,7 @@
         "เธออาจยังไม่เห็นความแข็งแกร่งของตัวเอง แต่คนที่อยู่ข้างเธออาจมองเห็นมันแล้ว",
       anime: "Reborn!",
       character: "Tsunayoshi Sawada",
-      color: ["#f3e4c4", "#cfa76a", "#8fa6d1"],
+      color: C[3],
       image: "images/4.JPG",
     },
     {
@@ -700,7 +710,7 @@
         "แม้โลกจะเต็มไปด้วยความไม่แน่นอน เรายังเลือกยึดมั่นในสิ่งที่เชื่อได้",
       anime: "Psycho-Pass",
       character: "Akane Tsunemori",
-      color: ["#fff0d2", "#f0bf6e", "#a9b8dc"],
+      color: C[4],
       image: "images/5.JPG",
     },
     {
@@ -712,7 +722,7 @@
         "ทุกครั้งที่ได้เรียนรู้สิ่งใหม่ เรายังมีโอกาสแข็งแกร่งขึ้นกว่าเดิม",
       anime: "Dragon Ball",
       character: "Goku",
-      color: ["#f4dcc2", "#dd9a62", "#8c9fcf"],
+      color: C[5],
       image: "images/6.JPG",
     },
     {
@@ -723,7 +733,7 @@
       message: "ความอ่อนโยนและความกล้าสามารถอยู่ในหัวใจเดียวกันได้",
       anime: "Ranking of Kings",
       character: "Bojji",
-      color: ["#f8e8c8", "#e8b36e", "#9fb0d8"],
+      color: C[0],
       image: "images/1.JPG",
     },
     {
@@ -734,7 +744,7 @@
       message: "แม้เส้นทางข้างหน้าจะยาก เราก็ยังค้นหาความหวังไปด้วยกันได้",
       anime: "The Promised Neverland",
       character: "Emma",
-      color: ["#fbe9cf", "#eeaa66", "#7f96c9"],
+      color: C[1],
       image: "images/2.JPG",
     },
     {
@@ -746,7 +756,7 @@
         "การเรียนรู้ที่จะเข้าใจหัวใจตัวเองอาจต้องใช้เวลา และไม่เป็นไรเลยหากจะค่อย ๆ เรียนรู้",
       anime: "Violet Evergarden",
       character: "Violet Evergarden",
-      color: ["#f6dcc0", "#d98c57", "#b8c3e3"],
+      color: C[2],
       image: "images/3.JPG",
     },
     {
@@ -758,7 +768,7 @@
         "อย่ารอให้ความกลัวหายไปทั้งหมดก่อนค่อยเริ่ม เพราะก้าวแรกอาจเป็นจุดเริ่มต้นของเรื่องดี ๆ",
       anime: "A Place Further than the Universe",
       character: "Mari Tamaki",
-      color: ["#f3e4c4", "#cfa76a", "#8fa6d1"],
+      color: C[3],
       image: "images/4.JPG",
     },
     {
@@ -770,7 +780,7 @@
         "เมื่อมีสิ่งที่รักอยู่ในใจ การพยายามเพื่อสิ่งนั้นก็ทำให้ทุกวันมีความหมาย",
       anime: "Chihayafuru",
       character: "Chihaya Ayase",
-      color: ["#fff0d2", "#f0bf6e", "#a9b8dc"],
+      color: C[4],
       image: "images/5.JPG",
     },
     {
@@ -782,7 +792,7 @@
         "ไม่จำเป็นต้องทำทุกอย่างได้สมบูรณ์แบบ แค่ตั้งใจและเป็นตัวเองก็เพียงพอแล้ว",
       anime: "Skip and Loafer",
       character: "Mitsumi Iwakura",
-      color: ["#f4dcc2", "#dd9a62", "#8c9fcf"],
+      color: C[5],
       image: "images/6.JPG",
     },
     {
@@ -794,7 +804,7 @@
         "เธอสมควรได้รับความรักและความอบอุ่น โดยไม่จำเป็นต้องทำอะไรเพื่อแลกมันมา",
       anime: "The Ancient Magus' Bride",
       character: "Chise Hatori",
-      color: ["#f8e8c8", "#e8b36e", "#9fb0d8"],
+      color: C[0],
       image: "images/1.JPG",
     },
     {
@@ -806,7 +816,7 @@
         "การยังไม่รู้ว่าตัวเองต้องการอะไร ไม่ได้แปลว่าเธอกำลังเดินผิดทาง",
       anime: "Silver Spoon",
       character: "Yuugo Hachiken",
-      color: ["#fbe9cf", "#eeaa66", "#7f96c9"],
+      color: C[1],
       image: "images/2.JPG",
     },
     {
@@ -818,7 +828,7 @@
         "แม้จะยังไปไม่ถึงฝัน ความหลงใหลในสิ่งที่ทำก็เป็นพลังให้เริ่มใหม่ได้",
       anime: "Little Witch Academia",
       character: "Akko Kagari",
-      color: ["#f6dcc0", "#d98c57", "#b8c3e3"],
+      color: C[2],
       image: "images/3.JPG",
     },
     {
@@ -829,7 +839,7 @@
       message: "ความผิดหวังไม่ได้ลบล้างความพยายามทั้งหมดที่เธอเคยทุ่มเทลงไป",
       anime: "Yuri!!! on Ice",
       character: "Yuri Katsuki",
-      color: ["#f3e4c4", "#cfa76a", "#8fa6d1"],
+      color: C[3],
       image: "images/4.JPG",
     },
     {
@@ -841,7 +851,7 @@
         "ไม่จำเป็นต้องแข่งขันกับทุกคน ลองค้นหาความสุขในแบบที่เป็นของตัวเอง",
       anime: "Free!",
       character: "Haruka Nanase",
-      color: ["#fff0d2", "#f0bf6e", "#a9b8dc"],
+      color: C[4],
       image: "images/5.JPG",
     },
     {
@@ -853,7 +863,7 @@
         "แม้จะผ่านเรื่องหนักหนามา เธอก็ยังสมควรมีอนาคตที่เต็มไปด้วยความหวัง",
       anime: "86",
       character: "Shinei Nouzen",
-      color: ["#f4dcc2", "#dd9a62", "#8c9fcf"],
+      color: C[5],
       image: "images/6.JPG",
     },
     {
@@ -865,7 +875,7 @@
         "แม้จะต้องเผชิญกับสิ่งที่ไม่คุ้นเคย เธอก็ค่อย ๆ เรียนรู้และค้นพบความเข้มแข็งได้",
       anime: "Inuyasha",
       character: "Kagome Higurashi",
-      color: ["#f8e8c8", "#e8b36e", "#9fb0d8"],
+      color: C[0],
       image: "images/1.JPG",
     },
     {
@@ -877,7 +887,7 @@
         "แม้จะมีวันที่ร้องไห้หรือทำพลาด เธอก็ยังเป็นคนที่มีคุณค่าเหมือนเดิม",
       anime: "Sailor Moon",
       character: "Usagi Tsukino",
-      color: ["#fbe9cf", "#eeaa66", "#7f96c9"],
+      color: C[1],
       image: "images/2.JPG",
     },
     {
@@ -888,7 +898,7 @@
       message: "จงให้โอกาสตัวเองได้มีความสุขกับสิ่งเล็ก ๆ ที่ทำให้หัวใจพองโต",
       anime: "Cardcaptor Sakura",
       character: "Sakura Kinomoto",
-      color: ["#f6dcc0", "#d98c57", "#b8c3e3"],
+      color: C[2],
       image: "images/3.JPG",
     },
     {
@@ -899,7 +909,7 @@
       message: "การเปลี่ยนแปลงอาจน่ากลัว แต่เธอไม่จำเป็นต้องเป็นคนเดิมตลอดไป",
       anime: "Yona of the Dawn",
       character: "Yona",
-      color: ["#f3e4c4", "#cfa76a", "#8fa6d1"],
+      color: C[3],
       image: "images/4.JPG",
     },
     {
@@ -911,7 +921,7 @@
         "แม้จะมีบางสิ่งที่ต้องปล่อยผ่าน แต่ความทรงจำดี ๆ ก็ยังเก็บไว้ในหัวใจได้",
       anime: "Natsume's Book of Friends",
       character: "Madara (Nyanko-sensei)",
-      color: ["#fff0d2", "#f0bf6e", "#a9b8dc"],
+      color: C[4],
       image: "images/5.JPG",
     },
     {
@@ -923,7 +933,7 @@
         "แม้จะรู้สึกว่าตัวเองเป็นเพียงส่วนเล็ก ๆ แต่สิ่งที่เธอทำก็ช่วยให้ทุกอย่างเดินหน้าต่อไป",
       anime: "Cells at Work!",
       character: "Red Blood Cell",
-      color: ["#f4dcc2", "#dd9a62", "#8c9fcf"],
+      color: C[5],
       image: "images/6.JPG",
     },
     {
@@ -934,7 +944,7 @@
       message: "ความฝันที่ยิ่งใหญ่สร้างขึ้นจากความพยายามเล็ก ๆ ของผู้คนมากมาย",
       anime: "Shirobako",
       character: "Aoi Miyamori",
-      color: ["#f8e8c8", "#e8b36e", "#9fb0d8"],
+      color: C[0],
       image: "images/1.JPG",
     },
     {
@@ -945,7 +955,7 @@
       message: "ตราบใดที่ยังมีชีวิตอยู่ เรายังมีโอกาสเริ่มต้นใหม่ได้เสมอ",
       anime: "One Piece",
       character: "Monkey D. Luffy",
-      color: ["#fbe9cf", "#eeaa66", "#7f96c9"],
+      color: C[1],
       image: "images/2.JPG",
     },
     {
@@ -956,7 +966,7 @@
       message: "ความผิดพลาดไม่ใช่จุดจบ แต่มันอาจเป็นเบาะแสที่พาเราไปสู่คำตอบ",
       anime: "Blue Lock",
       character: "Yoichi Isagi",
-      color: ["#f6dcc0", "#d98c57", "#b8c3e3"],
+      color: C[2],
       image: "images/3.JPG",
     },
     {
@@ -968,7 +978,7 @@
         "ความเข้มแข็งที่แท้จริงอาจไม่ใช่การเอาชนะใคร แต่เป็นการไม่ปล่อยให้ความเกลียดชังครอบงำหัวใจ",
       anime: "Vinland Saga",
       character: "Thorfinn",
-      color: ["#f3e4c4", "#cfa76a", "#8fa6d1"],
+      color: C[3],
       image: "images/4.JPG",
     },
     {
@@ -979,7 +989,7 @@
       message: "ถึงจะก้าวออกไปอย่างกล้า ๆ กลัว ๆ ก็นับว่าเราได้เริ่มต้นแล้ว",
       anime: "Bocchi the Rock!",
       character: "Hitori Gotoh",
-      color: ["#fff0d2", "#f0bf6e", "#a9b8dc"],
+      color: C[4],
       image: "images/5.JPG",
     },
     {
@@ -990,7 +1000,7 @@
       message: "จงรักษาความดีงามในหัวใจ แม้เส้นทางข้างหน้าจะไม่ง่ายเลย",
       anime: "JoJo's Bizarre Adventure",
       character: "Jonathan Joestar",
-      color: ["#f4dcc2", "#dd9a62", "#8c9fcf"],
+      color: C[5],
       image: "images/6.JPG",
     },
     {
@@ -1001,7 +1011,7 @@
       message: "เธอไม่จำเป็นต้องเข้าใจทุกอย่างเกี่ยวกับตัวเองในวันนี้ก็ได้",
       anime: "Neon Genesis Evangelion",
       character: "Shinji Ikari",
-      color: ["#f8e8c8", "#e8b36e", "#9fb0d8"],
+      color: C[0],
       image: "images/1.JPG",
     },
     {
@@ -1013,7 +1023,7 @@
         "ไม่เป็นไรเลยถ้าจะเขินอายบ้าง ขอเพียงอย่าปิดกั้นตัวเองจากสิ่งที่รัก",
       anime: "K-On!",
       character: "Mio Akiyama",
-      color: ["#fbe9cf", "#eeaa66", "#7f96c9"],
+      color: C[1],
       image: "images/2.JPG",
     },
     {
@@ -1025,7 +1035,7 @@
         "อย่าปล่อยให้ความผิดพลาดในอดีตทำให้เธอลืมความหมายของการพยายามในวันนี้",
       anime: "The Seven Deadly Sins",
       character: "Meliodas",
-      color: ["#f6dcc0", "#d98c57", "#b8c3e3"],
+      color: C[2],
       image: "images/3.JPG",
     },
     {
@@ -1037,7 +1047,7 @@
         "แม้วันนี้จะทำได้ไม่ดีอย่างที่หวัง พรุ่งนี้ก็ยังเป็นโอกาสให้เราเรียนรู้",
       anime: "Neon Genesis Evangelion",
       character: "Misato Katsuragi",
-      color: ["#f3e4c4", "#cfa76a", "#8fa6d1"],
+      color: C[3],
       image: "images/4.JPG",
     },
   ];
@@ -1232,6 +1242,46 @@
     fortuneCard.style.setProperty("--card-photo", `url("${card.image}")`);
   }
 
+  // Shrinks the card text (via the CSS variables --ic, --icm, --en, --th
+  // defined in theme.css) until everything fits inside the card border.
+  // Must run while the card is visible, otherwise nothing can be measured.
+  function fitCardText() {
+    if (!fortuneCard || fortuneCard.hidden) return;
+    const border = fortuneCard.querySelector(".card-border");
+    const title = $("cardTitle");
+    if (!border || !title) return;
+
+    let ic = 58; // icon size
+    let icm = 34; // icon top margin
+    let en = 25; // English title size
+    let th = 10; // Thai message size
+
+    const apply = () => {
+      fortuneCard.style.setProperty("--ic", `${ic}px`);
+      fortuneCard.style.setProperty("--icm", `${icm}px`);
+      fortuneCard.style.setProperty("--en", `${en}px`);
+      fortuneCard.style.setProperty("--th", `${th}px`);
+    };
+    apply();
+
+    // 1) Shrink the title until no line is wider than the card
+    while (title.scrollWidth > title.clientWidth + 1 && en > 14) {
+      en -= 0.5;
+      apply();
+    }
+
+    // 2) If the card is still too tall: icon -> spacing -> Thai text -> title
+    const overflowing = () => border.scrollHeight > border.clientHeight + 1;
+    for (let i = 0; i < 60 && overflowing(); i++) {
+      if (ic > 30) ic -= 3;
+      else if (icm > 6) icm -= 4;
+      else if (th > 8.5) th -= 0.5;
+      else if (en > 14) en -= 0.5;
+      else break;
+      apply();
+    }
+  }
+
   if (drawCardButton) {
     drawCardButton.addEventListener("click", () => {
       currentCard = pickCard();
@@ -1239,6 +1289,7 @@
 
       emptyCard.hidden = true;
       fortuneCard.hidden = false;
+      fitCardText(); // after the card is visible so it can be measured
 
       // Restart the reveal animation
       fortuneCard.style.animation = "none";
@@ -1252,6 +1303,11 @@
       const rect = fortuneCard.getBoundingClientRect();
       sparkleBurst(rect.left + rect.width / 2, rect.top + rect.height / 2, 22);
     });
+  }
+
+  window.addEventListener("resize", fitCardText);
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(fitCardText);
   }
 
   /* ---------- Save card as image ---------- */
@@ -1332,26 +1388,24 @@
     ctx.textAlign = previousAlign;
   }
 
-  // Wraps and draws text centered on `x`
-  function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+  // Breaks text into lines no wider than `maxWidth` (uses the current ctx.font)
+  function getLines(ctx, text, maxWidth) {
     const pieces = segmentText(text);
+    const lines = [];
     let line = "";
-    let lineIndex = 0;
 
     pieces.forEach((piece) => {
       const test = line + piece;
       if (ctx.measureText(test.trimEnd()).width > maxWidth && line.trim()) {
-        fillCentered(ctx, line.trimEnd(), x, y + lineIndex * lineHeight);
+        lines.push(line.trimEnd());
         line = piece.trimStart();
-        lineIndex++;
       } else {
         line = test;
       }
     });
 
-    if (line.trim()) {
-      fillCentered(ctx, line.trimEnd(), x, y + lineIndex * lineHeight);
-    }
+    if (line.trim()) lines.push(line.trimEnd());
+    return lines;
   }
 
   async function renderCardCanvas(card) {
@@ -1413,6 +1467,14 @@
 
       ctx.fillStyle = overlay;
       ctx.fillRect(0, 0, width, height);
+
+      // Extra shade toward the bottom so the text stays readable on busy photos
+      const bottomShade = ctx.createLinearGradient(0, height * 0.35, 0, height);
+      bottomShade.addColorStop(0, "rgba(10, 16, 40, 0)");
+      bottomShade.addColorStop(1, "rgba(10, 16, 40, 0.55)");
+      ctx.fillStyle = bottomShade;
+      ctx.fillRect(0, 0, width, height);
+
       ctx.restore();
     }
 
@@ -1463,13 +1525,35 @@
     ctx.font = `bold 19px ${SANS}`;
     ctx.fillText(card.label, 350, 405);
 
-    ctx.font = `bold 48px ${SERIF}`;
-    card.title.split("\n").forEach((line, i) => {
-      ctx.fillText(line, 350, 485 + i * 57);
+    // Title: shrink so the widest line stays within 580px
+    const titleLines = card.title.split("\n");
+    let titleSize = 48;
+    let widest = 0;
+    do {
+      ctx.font = `bold ${titleSize}px ${SERIF}`;
+      widest = Math.max(...titleLines.map((l) => ctx.measureText(l).width));
+      if (widest > 580) titleSize -= 2;
+    } while (widest > 580 && titleSize > 26);
+
+    const titleLH = titleSize * 1.18;
+    titleLines.forEach((line, i) => {
+      fillCentered(ctx, line, 350, 485 + i * titleLH);
     });
 
-    ctx.font = `600 22px ${THAI}`;
-    wrapText(ctx, card.message, 350, 635, 520, 38);
+    // Message: shrink until it fits in at most 4 lines
+    let msgSize = 22;
+    let msgLines;
+    do {
+      ctx.font = `600 ${msgSize}px ${THAI}`;
+      msgLines = getLines(ctx, card.message, 520);
+      if (msgLines.length > 4) msgSize -= 1;
+    } while (msgLines.length > 4 && msgSize > 15);
+
+    const msgLH = msgSize * 1.7;
+    const msgY = 485 + titleLH * (titleLines.length - 1) + 80;
+    msgLines.forEach((line, i) => {
+      fillCentered(ctx, line, 350, msgY + i * msgLH);
+    });
     shadowOff();
 
     ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
