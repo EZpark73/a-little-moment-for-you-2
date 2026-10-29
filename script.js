@@ -54,86 +54,50 @@
   let wishPage = 1;
   let wallReady = false;
 
-  /* ---------- Cards ---------- */
-  const cards = [
-    {
+  /* ---------- Cards (88 quotes from cards.js) ---------- */
+  const PALETTES = [
+    ["#f8e8c8", "#e8b36e", "#9fb0d8"],
+    ["#fbe9cf", "#eeaa66", "#7f96c9"],
+    ["#f6dcc0", "#d98c57", "#b8c3e3"],
+    ["#f3e4c4", "#cfa76a", "#8fa6d1"],
+    ["#fff0d2", "#f0bf6e", "#a9b8dc"],
+    ["#f4dcc2", "#dd9a62", "#8c9fcf"],
+  ];
+  const ICONS = ["☾", "✦", "♡", "☼", "✧", "☆"];
+  const QUOTES = Array.isArray(window.CARD_QUOTES) ? window.CARD_QUOTES : [];
+
+  const cards = QUOTES.map((q, i) => ({
+    number: `NO. ${String(i + 1).padStart(2, "0")}`,
+    icon: ICONS[i % ICONS.length],
+    label: "A LITTLE QUOTE",
+    source: `${q[0]} — ${q[1]}` + (q[4] ? ` ✦ ${q[4]}` : ""),
+    title: q[2],
+    message: q[3],
+    color: PALETTES[i % PALETTES.length],
+    image: `images/${(i % 6) + 1}.JPG`,
+  }));
+
+  if (!cards.length) {
+    cards.push({
       number: "NO. 01",
       icon: "☾",
-      label: "HAPPY ENERGY",
-      title: "A little joy\nfinds its way.",
+      label: "A LITTLE QUOTE",
+      source: "DEW ✦ TEE",
+      title: "A little joy finds its way.",
       message: "ขอให้วันนี้มีเรื่องเล็ก ๆ ที่ทำให้คุณยิ้มได้",
-      color: ["#f8e8c8", "#e8b36e", "#9fb0d8"],
+      color: PALETTES[0],
       image: "images/1.JPG",
-    },
-    {
-      number: "NO. 02",
-      icon: "✦",
-      label: "LUCKY MOMENT",
-      title: "Good things\nare on their way.",
-      message: "ขอให้ความสุขเดินทางมาหาคุณในเวลาที่พอดี",
-      color: ["#fbe9cf", "#eeaa66", "#7f96c9"],
-      image: "images/2.JPG",
-    },
-    {
-      number: "NO. 03",
-      icon: "♡",
-      label: "A NOTE FOR YOU",
-      title: "You make this\nmoment shine.",
-      message: "ขอบคุณที่เป็นส่วนหนึ่งของความทรงจำดี ๆ วันนี้",
-      color: ["#f6dcc0", "#d98c57", "#b8c3e3"],
-      image: "images/3.JPG",
-    },
-    {
-      number: "NO. 04",
-      icon: "☼",
-      label: "SOFT REMINDER",
-      title: "You deserve\nsoft days, too.",
-      message: "อย่าลืมใจดีกับตัวเอง เหมือนที่คุณใจดีกับคนอื่นนะ",
-      color: ["#f3e4c4", "#cfa76a", "#8fa6d1"],
-      image: "images/4.JPG",
-    },
-    {
-      number: "NO. 05",
-      icon: "✧",
-      label: "FANCON MEMORY",
-      title: "Keep this little\nlight with you.",
-      message: "ขอให้ความทรงจำวันนี้เป็นแสงเล็ก ๆ ในวันที่เหนื่อย",
-      color: ["#fff0d2", "#f0bf6e", "#a9b8dc"],
-      image: "images/5.JPG",
-    },
-    {
-      number: "NO. 06",
-      icon: "☆",
-      label: "WISHING YOU WELL",
-      title: "May your heart\nfeel at home.",
-      message: "ขอให้คุณได้อยู่ท่ามกลางสิ่งที่ทำให้หัวใจอบอุ่นเสมอ",
-      color: ["#f4dcc2", "#dd9a62", "#8c9fcf"],
-      image: "images/6.JPG",
-    },
-  ];
-
-  // Warm the image cache after the page has loaded, without blocking first paint
-  window.addEventListener("load", () => {
-    const idle =
-      window.requestIdleCallback || ((fn) => window.setTimeout(fn, 1200));
-    idle(() => {
-      cards.forEach((card) => {
-        const img = new Image();
-        img.decoding = "async";
-        img.src = card.image;
-      });
     });
-  });
+  }
 
-  // การ์ดหน้าเว็บ: ใช้ขนาดเดิม (25px) ลดเฉพาะเมื่อข้อความยาว
+  // ขนาดตัวอักษรตามความยาวข้อความ (การ์ดบนหน้าเว็บ)
   function cardSizes(card) {
     const L = card.title.length;
     const T = card.message.length;
     return {
-      en: L <= 28 ? 25 : L <= 45 ? 21 : L <= 70 ? 17 : L <= 100 ? 14 : 12.5,
-      th: T <= 45 ? 10 : T <= 75 ? 9.6 : 9,
-      ic: L > 40 ? 44 : 58,
-      icm: L > 40 ? 22 : 34,
+      en: L <= 40 ? 21 : L <= 70 ? 17 : L <= 100 ? 14.5 : 12.5,
+      th: T <= 40 ? 11 : T <= 70 ? 10 : 9.2,
+      ic: L > 100 ? 30 : 44,
     };
   }
 
@@ -333,7 +297,6 @@
     fortuneCard.style.setProperty("--en", `${s.en}px`);
     fortuneCard.style.setProperty("--th", `${s.th}px`);
     fortuneCard.style.setProperty("--ic", `${s.ic}px`);
-    fortuneCard.style.setProperty("--icm", `${s.icm}px`);
 
     fortuneCard.style.background =
       `linear-gradient(155deg, ${card.color[0]} 0%, ` +
@@ -464,9 +427,9 @@
     const L = card.title.length;
     const T = card.message.length;
     return {
-      en: L <= 28 ? 48 : L <= 45 ? 40 : L <= 70 ? 34 : L <= 100 ? 29 : 25,
-      th: T <= 45 ? 22 : T <= 75 ? 21 : 19,
-      ic: L > 60 ? 80 : 100,
+      en: L <= 40 ? 46 : L <= 70 ? 38 : L <= 100 ? 32 : 27,
+      th: T <= 40 ? 26 : T <= 70 ? 24 : 21,
+      ic: L > 100 ? 70 : 90,
     };
   }
 
@@ -477,7 +440,7 @@
     const ctx = canvas.getContext("2d");
 
     // มือถือใช้ความละเอียดต่ำลงเล็กน้อย เพื่อไม่ให้หน่วยความจำเต็ม
-    const scale = isMobile ? 1.25 : 2;
+    const scale = isMobile ? 1.5 : 2;
     const width = 700;
     const height = 980;
 
@@ -556,7 +519,6 @@
     ].forEach(([x, y], i) => drawStar(ctx, x, y, i % 2 ? 8 : 11));
 
     const shadowOn = () => {
-      if (isMobile) return;
       ctx.shadowColor = "rgba(0, 0, 0, 0.8)";
       ctx.shadowBlur = 10;
       ctx.shadowOffsetY = 2;
@@ -581,32 +543,50 @@
 
     ctx.textAlign = "center";
 
-    // ตำแหน่งเหมือนการ์ดเดิม (ไอคอน 330 / label 405 / ชื่อ 485 / ข้อความไทย)
+    // --- วัดความสูงของข้อความก่อน แล้วจัดให้อยู่กึ่งกลางการ์ด ---
     const sz = canvasSizes(card);
     const MAXW = 540;
 
-    ctx.font = `${sz.ic}px ${SERIF}`;
-    fillCentered(ctx, card.icon, 350, sz.ic === 100 ? 330 : 310);
-
-    ctx.font = `bold 19px ${SANS}`;
-    fillCentered(ctx, card.label, 350, sz.ic === 100 ? 405 : 375);
-
-    ctx.font = `bold ${sz.en}px ${SERIF}`;
+    ctx.font = `italic ${sz.en}px ${SERIF}`;
     const enLines = wrapLines(ctx, card.title, MAXW);
-    const enLH = sz.en * 1.19;
-    let y = sz.ic === 100 ? 485 : 455;
-    enLines.forEach((line, i) => fillCentered(ctx, line, 350, y + i * enLH));
-    y += (enLines.length - 1) * enLH + 80;
+    const enLH = sz.en * 1.28;
 
     ctx.font = `600 ${sz.th}px ${THAI}`;
-    const thLines = wrapLines(ctx, card.message, 520);
-    const thLH = sz.th * 1.72;
-    thLines.forEach((line, i) => fillCentered(ctx, line, 350, y + i * thLH));
-    y += (thLines.length - 1) * thLH + 54;
+    const thLines = wrapLines(ctx, card.message, MAXW);
+    const thLH = sz.th * 1.7;
 
-    ctx.font = `bold 16px ${SANS}`;
-    wrapLines(ctx, card.source.toUpperCase(), MAXW).forEach((line, i) =>
-      fillCentered(ctx, line, 350, y + i * 24),
+    ctx.font = `bold 17px ${SANS}`;
+    const srcLines = wrapLines(ctx, card.source.toUpperCase(), MAXW);
+    const srcLH = 26;
+    const srcTop = 860 - (srcLines.length - 1) * srcLH;
+
+    const total =
+      sz.ic + 22 + 44 + enLines.length * enLH + 22 + thLines.length * thLH;
+    const region = srcTop - 30 - 100;
+    let y = 100 + Math.max(0, (region - total) / 2);
+
+    ctx.font = `${sz.ic}px ${SERIF}`;
+    fillCentered(ctx, card.icon, 350, y + sz.ic * 0.85);
+    y += sz.ic + 22;
+
+    ctx.font = `bold 19px ${SANS}`;
+    fillCentered(ctx, card.label, 350, y + 14);
+    y += 44;
+
+    ctx.font = `italic ${sz.en}px ${SERIF}`;
+    enLines.forEach((line, i) =>
+      fillCentered(ctx, line, 350, y + sz.en * 0.9 + i * enLH),
+    );
+    y += enLines.length * enLH + 22;
+
+    ctx.font = `600 ${sz.th}px ${THAI}`;
+    thLines.forEach((line, i) =>
+      fillCentered(ctx, line, 350, y + sz.th * 0.9 + i * thLH),
+    );
+
+    ctx.font = `bold 17px ${SANS}`;
+    srcLines.forEach((line, i) =>
+      fillCentered(ctx, line, 350, srcTop + i * srcLH),
     );
     shadowOff();
 
@@ -676,23 +656,14 @@
 
   function closeSaveSheet() {
     if (!activeSheet) return;
-    if (activeSheet.url) URL.revokeObjectURL(activeSheet.url);
     activeSheet.el.remove();
     activeSheet = null;
   }
 
-  // หน้าพรีวิวบนมือถือ/ไอแพด: รูป + ปุ่มแชร์ + ปุ่มดาวน์โหลด (เรียกจากการแตะใหม่เสมอ)
-  function openSaveSheet(canvas, blob, fileName) {
+  // หน้าพรีวิวบนมือถือ: ใช้ data URL (เสถียรกว่า blob URL ในเบราว์เซอร์ในแอป เช่น LINE/IG)
+  // และมีปุ่ม Share ที่เรียกจากการแตะใหม่ (ไม่โดนบล็อกเรื่อง user gesture)
+  function openSaveSheet(dataUrl, blob, fileName) {
     closeSaveSheet();
-
-    let src = "";
-    try {
-      src = canvas.toDataURL("image/png");
-    } catch (error) {
-      src = "";
-    }
-    const blobUrl = URL.createObjectURL(blob);
-    if (!src || src === "data:,") src = blobUrl;
 
     const sheet = document.createElement("div");
     sheet.className = "save-sheet";
@@ -702,53 +673,41 @@
 
     const img = document.createElement("img");
     img.alt = "Your little moment card";
-    img.src = src;
-    img.style.webkitTouchCallout = "default";
-    img.style.userSelect = "auto";
+    img.src = dataUrl;
 
     const hint = document.createElement("p");
-    hint.textContent = "แตะค้างที่รูปเพื่อบันทึกลงเครื่อง หรือกดปุ่มด้านล่าง ♡";
+    hint.textContent = "แตะค้างที่รูปเพื่อบันทึกลงเครื่องได้เลย ♡";
 
-    const row = document.createElement("div");
-    row.style.cssText =
-      "display:flex;flex-wrap:wrap;gap:10px;justify-content:center";
+    const close = document.createElement("button");
+    close.type = "button";
+    close.className = "primary-button";
+    close.textContent = "Close";
+    close.addEventListener("click", closeSaveSheet);
+
+    sheet.addEventListener("click", (event) => {
+      if (event.target === sheet) closeSaveSheet();
+    });
+
+    sheet.append(img, hint);
 
     if (navigator.share && navigator.canShare) {
       const share = document.createElement("button");
       share.type = "button";
-      share.className = "primary-button";
-      share.textContent = "Save / Share ↗";
+      share.className = "secondary-button";
+      share.textContent = "Share / Save ↗";
       share.addEventListener("click", async () => {
         const result = await tryShare(blob, fileName);
         if (result === "done") showToast("Saved! ♡");
         else if (result === "unsupported")
           showToast("แตะค้างที่รูปเพื่อบันทึกได้เลย ♡");
       });
-      row.append(share);
+      sheet.append(share);
     }
 
-    const download = document.createElement("a");
-    download.className = "secondary-button";
-    download.style.cssText = "text-decoration:none;display:inline-block";
-    download.href = blobUrl;
-    download.download = fileName;
-    download.textContent = "Download ↓";
-    row.append(download);
-
-    const close = document.createElement("button");
-    close.type = "button";
-    close.className = "secondary-button";
-    close.textContent = "Close";
-    close.addEventListener("click", closeSaveSheet);
-    row.append(close);
-
-    sheet.addEventListener("click", (event) => {
-      if (event.target === sheet) closeSaveSheet();
-    });
-
-    sheet.append(img, hint, row);
+    sheet.append(close);
     document.body.appendChild(sheet);
-    activeSheet = { el: sheet, url: blobUrl };
+    activeSheet = { el: sheet };
+    close.focus({ preventScroll: true });
 
     showToast("แตะค้างที่รูปเพื่อบันทึกได้เลย ♡");
     saveNote.textContent = "แตะค้างที่รูปเพื่อบันทึกลงเครื่องได้เลยครับ ♡";
@@ -774,7 +733,7 @@
           .replace(/[^a-z0-9]+/g, "-")}.png`;
 
         if (isMobile) {
-          openSaveSheet(canvas, blob, fileName);
+          openSaveSheet(canvas.toDataURL("image/png"), blob, fileName);
         } else {
           triggerDownload(blob, fileName);
         }
