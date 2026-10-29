@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     />
-    <meta name="theme-color" content="#141c36" />
+    <meta name="theme-color" content="#121a40" />
     <meta name="color-scheme" content="dark" />
     <meta
       name="description"
@@ -30,6 +30,7 @@
   <body>
     <div class="sky-glow glow-one" aria-hidden="true"></div>
     <div class="sky-glow glow-two" aria-hidden="true"></div>
+    <div class="sky-glow glow-three" aria-hidden="true"></div>
     <div id="starfield" class="starfield" aria-hidden="true"></div>
     <svg class="swirl swirl-a" viewBox="0 0 60 60" aria-hidden="true">
       <path d="M38 12 C38 3 22 3 20 14 C18 25 36 27 38 16 C41 30 34 46 12 52" />
@@ -58,7 +59,8 @@
           href="#page-letter"
           data-go="letter"
           aria-label="A Little Moment for You home"
-          ><span class="wordmark-star">✦</span> DEW TEE SECRET AREA FANCON</a
+          ><span class="wordmark-star">✦</span> <span class="w-dew">DEW</span>
+          <span class="w-tee">TEE</span> SECRET AREA FANCON</a
         >
         <span class="header-note">Saturday 7 - Sunday 8 November 2026</span>
       </header>
@@ -70,7 +72,11 @@
         aria-labelledby="main-title"
       >
         <div class="eyebrow">
-          <span class="eyebrow-line"></span> DEW TEE SECRET AREA FANCON
+          <span class="eyebrow-line"></span>
+          <span
+            ><span class="w-dew">DEW</span>
+            <span class="w-tee">TEE</span> SECRET AREA FANCON</span
+          >
           <span class="eyebrow-line"></span>
         </div>
         <h1 id="main-title">
@@ -105,8 +111,10 @@
                     >A LITTLE NOTE, JUST FOR YOU</span
                   >
                   <span class="paper-message"
-                    >ไม่ว่าคุณจะเดินทางมาจากที่ไหน<br />ขอให้วันนี้มีช่วงเวลาที่ทำให้ยิ้มได้เยอะ&nbsp;ๆ
-                    นะ</span
+                    >ไม่ว่าคุณจะเดินทางมาจากที่ไหน<br />ขอให้วันนี้มีช่วงเวลาที่ทำให้ยิ้มได้<span
+                      style="white-space: nowrap"
+                      >เยอะ&nbsp;ๆ&nbsp;นะ</span
+                    ></span
                   >
                   <span class="paper-english"
                     >May this little moment become a lovely memory. ♡</span
@@ -312,7 +320,9 @@
       <footer class="site-footer">
         <div class="footer-star">✧</div>
         <p>Thank you for sharing this little moment with us.</p>
-        <p class="footer-sign">DEW ✦ TEE</p>
+        <p class="footer-sign">
+          <span class="w-dew">DEW</span> ✦ <span class="w-tee">TEE</span>
+        </p>
       </footer>
     </main>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
