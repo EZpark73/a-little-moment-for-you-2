@@ -90,14 +90,15 @@
     });
   }
 
-  // ขนาดตัวอักษรตามความยาวข้อความ (การ์ดบนหน้าเว็บ)
+  // การ์ดหน้าเว็บ: ใช้ขนาดเดิม (25px) ลดเฉพาะเมื่อข้อความยาว
   function cardSizes(card) {
     const L = card.title.length;
     const T = card.message.length;
     return {
-      en: L <= 40 ? 21 : L <= 70 ? 17 : L <= 100 ? 14.5 : 12.5,
-      th: T <= 40 ? 11 : T <= 70 ? 10 : 9.2,
-      ic: L > 100 ? 30 : 44,
+      en: L <= 28 ? 25 : L <= 45 ? 21 : L <= 70 ? 17 : L <= 100 ? 14 : 12.5,
+      th: T <= 45 ? 10 : T <= 75 ? 9.6 : 9,
+      ic: L > 40 ? 44 : 58,
+      icm: L > 40 ? 22 : 34,
     };
   }
 
@@ -297,6 +298,7 @@
     fortuneCard.style.setProperty("--en", `${s.en}px`);
     fortuneCard.style.setProperty("--th", `${s.th}px`);
     fortuneCard.style.setProperty("--ic", `${s.ic}px`);
+    fortuneCard.style.setProperty("--icm", `${s.icm}px`);
 
     fortuneCard.style.background =
       `linear-gradient(155deg, ${card.color[0]} 0%, ` +
@@ -427,9 +429,9 @@
     const L = card.title.length;
     const T = card.message.length;
     return {
-      en: L <= 40 ? 46 : L <= 70 ? 38 : L <= 100 ? 32 : 27,
-      th: T <= 40 ? 26 : T <= 70 ? 24 : 21,
-      ic: L > 100 ? 70 : 90,
+      en: L <= 28 ? 48 : L <= 45 ? 40 : L <= 70 ? 34 : L <= 100 ? 29 : 25,
+      th: T <= 45 ? 22 : T <= 75 ? 21 : 19,
+      ic: L > 60 ? 80 : 100,
     };
   }
 
@@ -440,7 +442,7 @@
     const ctx = canvas.getContext("2d");
 
     // มือถือใช้ความละเอียดต่ำลงเล็กน้อย เพื่อไม่ให้หน่วยความจำเต็ม
-    const scale = isMobile ? 1.5 : 2;
+    const scale = isMobile ? 1.25 : 2;
     const width = 700;
     const height = 980;
 
@@ -519,6 +521,7 @@
     ].forEach(([x, y], i) => drawStar(ctx, x, y, i % 2 ? 8 : 11));
 
     const shadowOn = () => {
+      if (isMobile) return;
       ctx.shadowColor = "rgba(0, 0, 0, 0.8)";
       ctx.shadowBlur = 10;
       ctx.shadowOffsetY = 2;
@@ -543,50 +546,32 @@
 
     ctx.textAlign = "center";
 
-    // --- วัดความสูงของข้อความก่อน แล้วจัดให้อยู่กึ่งกลางการ์ด ---
+    // ตำแหน่งเหมือนการ์ดเดิม (ไอคอน 330 / label 405 / ชื่อ 485 / ข้อความไทย)
     const sz = canvasSizes(card);
     const MAXW = 540;
 
-    ctx.font = `italic ${sz.en}px ${SERIF}`;
-    const enLines = wrapLines(ctx, card.title, MAXW);
-    const enLH = sz.en * 1.28;
-
-    ctx.font = `600 ${sz.th}px ${THAI}`;
-    const thLines = wrapLines(ctx, card.message, MAXW);
-    const thLH = sz.th * 1.7;
-
-    ctx.font = `bold 17px ${SANS}`;
-    const srcLines = wrapLines(ctx, card.source.toUpperCase(), MAXW);
-    const srcLH = 26;
-    const srcTop = 860 - (srcLines.length - 1) * srcLH;
-
-    const total =
-      sz.ic + 22 + 44 + enLines.length * enLH + 22 + thLines.length * thLH;
-    const region = srcTop - 30 - 100;
-    let y = 100 + Math.max(0, (region - total) / 2);
-
     ctx.font = `${sz.ic}px ${SERIF}`;
-    fillCentered(ctx, card.icon, 350, y + sz.ic * 0.85);
-    y += sz.ic + 22;
+    fillCentered(ctx, card.icon, 350, sz.ic === 100 ? 330 : 310);
 
     ctx.font = `bold 19px ${SANS}`;
-    fillCentered(ctx, card.label, 350, y + 14);
-    y += 44;
+    fillCentered(ctx, card.label, 350, sz.ic === 100 ? 405 : 375);
 
-    ctx.font = `italic ${sz.en}px ${SERIF}`;
-    enLines.forEach((line, i) =>
-      fillCentered(ctx, line, 350, y + sz.en * 0.9 + i * enLH),
-    );
-    y += enLines.length * enLH + 22;
+    ctx.font = `bold ${sz.en}px ${SERIF}`;
+    const enLines = wrapLines(ctx, card.title, MAXW);
+    const enLH = sz.en * 1.19;
+    let y = sz.ic === 100 ? 485 : 455;
+    enLines.forEach((line, i) => fillCentered(ctx, line, 350, y + i * enLH));
+    y += (enLines.length - 1) * enLH + 80;
 
     ctx.font = `600 ${sz.th}px ${THAI}`;
-    thLines.forEach((line, i) =>
-      fillCentered(ctx, line, 350, y + sz.th * 0.9 + i * thLH),
-    );
+    const thLines = wrapLines(ctx, card.message, 520);
+    const thLH = sz.th * 1.72;
+    thLines.forEach((line, i) => fillCentered(ctx, line, 350, y + i * thLH));
+    y += (thLines.length - 1) * thLH + 54;
 
-    ctx.font = `bold 17px ${SANS}`;
-    srcLines.forEach((line, i) =>
-      fillCentered(ctx, line, 350, srcTop + i * srcLH),
+    ctx.font = `bold 16px ${SANS}`;
+    wrapLines(ctx, card.source.toUpperCase(), MAXW).forEach((line, i) =>
+      fillCentered(ctx, line, 350, y + i * 24),
     );
     shadowOff();
 
@@ -656,14 +641,23 @@
 
   function closeSaveSheet() {
     if (!activeSheet) return;
+    if (activeSheet.url) URL.revokeObjectURL(activeSheet.url);
     activeSheet.el.remove();
     activeSheet = null;
   }
 
-  // หน้าพรีวิวบนมือถือ: ใช้ data URL (เสถียรกว่า blob URL ในเบราว์เซอร์ในแอป เช่น LINE/IG)
-  // และมีปุ่ม Share ที่เรียกจากการแตะใหม่ (ไม่โดนบล็อกเรื่อง user gesture)
-  function openSaveSheet(dataUrl, blob, fileName) {
+  // หน้าพรีวิวบนมือถือ/ไอแพด: รูป + ปุ่มแชร์ + ปุ่มดาวน์โหลด (เรียกจากการแตะใหม่เสมอ)
+  function openSaveSheet(canvas, blob, fileName) {
     closeSaveSheet();
+
+    let src = "";
+    try {
+      src = canvas.toDataURL("image/png");
+    } catch (error) {
+      src = "";
+    }
+    const blobUrl = URL.createObjectURL(blob);
+    if (!src || src === "data:,") src = blobUrl;
 
     const sheet = document.createElement("div");
     sheet.className = "save-sheet";
@@ -673,41 +667,53 @@
 
     const img = document.createElement("img");
     img.alt = "Your little moment card";
-    img.src = dataUrl;
+    img.src = src;
+    img.style.webkitTouchCallout = "default";
+    img.style.userSelect = "auto";
 
     const hint = document.createElement("p");
-    hint.textContent = "แตะค้างที่รูปเพื่อบันทึกลงเครื่องได้เลย ♡";
+    hint.textContent = "แตะค้างที่รูปเพื่อบันทึกลงเครื่อง หรือกดปุ่มด้านล่าง ♡";
 
-    const close = document.createElement("button");
-    close.type = "button";
-    close.className = "primary-button";
-    close.textContent = "Close";
-    close.addEventListener("click", closeSaveSheet);
-
-    sheet.addEventListener("click", (event) => {
-      if (event.target === sheet) closeSaveSheet();
-    });
-
-    sheet.append(img, hint);
+    const row = document.createElement("div");
+    row.style.cssText =
+      "display:flex;flex-wrap:wrap;gap:10px;justify-content:center";
 
     if (navigator.share && navigator.canShare) {
       const share = document.createElement("button");
       share.type = "button";
-      share.className = "secondary-button";
-      share.textContent = "Share / Save ↗";
+      share.className = "primary-button";
+      share.textContent = "Save / Share ↗";
       share.addEventListener("click", async () => {
         const result = await tryShare(blob, fileName);
         if (result === "done") showToast("Saved! ♡");
         else if (result === "unsupported")
           showToast("แตะค้างที่รูปเพื่อบันทึกได้เลย ♡");
       });
-      sheet.append(share);
+      row.append(share);
     }
 
-    sheet.append(close);
+    const download = document.createElement("a");
+    download.className = "secondary-button";
+    download.style.cssText = "text-decoration:none;display:inline-block";
+    download.href = blobUrl;
+    download.download = fileName;
+    download.textContent = "Download ↓";
+    row.append(download);
+
+    const close = document.createElement("button");
+    close.type = "button";
+    close.className = "secondary-button";
+    close.textContent = "Close";
+    close.addEventListener("click", closeSaveSheet);
+    row.append(close);
+
+    sheet.addEventListener("click", (event) => {
+      if (event.target === sheet) closeSaveSheet();
+    });
+
+    sheet.append(img, hint, row);
     document.body.appendChild(sheet);
-    activeSheet = { el: sheet };
-    close.focus({ preventScroll: true });
+    activeSheet = { el: sheet, url: blobUrl };
 
     showToast("แตะค้างที่รูปเพื่อบันทึกได้เลย ♡");
     saveNote.textContent = "แตะค้างที่รูปเพื่อบันทึกลงเครื่องได้เลยครับ ♡";
@@ -733,7 +739,7 @@
           .replace(/[^a-z0-9]+/g, "-")}.png`;
 
         if (isMobile) {
-          openSaveSheet(canvas.toDataURL("image/png"), blob, fileName);
+          openSaveSheet(canvas, blob, fileName);
         } else {
           triggerDownload(blob, fileName);
         }
