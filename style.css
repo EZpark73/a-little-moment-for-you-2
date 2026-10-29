@@ -1646,7 +1646,7 @@ body::before {
         rgba(10, 4, 0, 0.4) 0 2px,
         transparent 2px 70px
       )
-      bottom / 100% 18% no-repeat,
+      bottom / 100% 16% no-repeat,
     /* พื้นไม้ */
     linear-gradient(
         180deg,
@@ -1655,7 +1655,7 @@ body::before {
         #3a2210 60%,
         #25150a 100%
       )
-      bottom / 100% 18% no-repeat,
+      bottom / 100% 16% no-repeat,
     /* ซี่ไม้ผนัง */
     repeating-linear-gradient(
         90deg,
