@@ -2192,3 +2192,73 @@ body::after {
     padding-bottom: calc(10dvh - 40px);
   }
 }
+
+/* ========================================
+   Round 3 tweaks (mobile)
+   ======================================== */
+@media (max-width: 600px) {
+  /* Page 1: Next centered and lifted off the wooden floor */
+  #page-letter {
+    padding-bottom: 7dvh;
+  }
+
+  .hero .letter-controls {
+    width: 100%;
+    justify-content: center;
+    margin-top: 6px;
+  }
+
+  .envelope-button.open .envelope {
+    margin-bottom: 22px;
+  }
+
+  /* Page 2: buttons fit their text (same text size, shorter pill) */
+  .card-actions {
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .card-actions button {
+    flex: 0 0 auto;
+    width: auto;
+    padding: 9px 16px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  /* Back / Next: two equal pills, centered and balanced */
+  .page-bottom-nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    width: min(100%, 310px);
+    padding: 0;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .page-bottom-nav .text-nav,
+  .page-bottom-nav .next-button {
+    width: 100%;
+    min-width: 0;
+    padding: 11px 8px;
+    font-size: 11px;
+    white-space: nowrap;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .page-bottom-nav .text-nav {
+    border: 1px solid rgba(240, 200, 140, 0.38);
+    border-radius: 999px;
+    background: rgba(255, 230, 180, 0.07);
+    color: #f4e2c2;
+  }
+
+  /* Page 4: wall cards pulled in from the screen edges */
+  .page-view > .wishes-wall {
+    width: calc(100% - 28px);
+    margin-left: auto;
+    margin-right: auto;
+  }
+}

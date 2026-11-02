@@ -1695,13 +1695,6 @@
     if ("letterSpacing" in ctx) ctx.letterSpacing = "0px";
     shadowOff();
 
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(48, 890);
-    ctx.lineTo(652, 890);
-    ctx.stroke();
-
     return canvas;
   }
 
