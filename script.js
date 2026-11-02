@@ -24,6 +24,7 @@
   const wishesWall = $("wishesWall");
   const pagination = $("pagination");
   const toast = $("toast");
+  const luckNext = $("luckNext");
 
   // Firestore instance is created safely in index.html (null if unavailable)
   const firestore = window.db || null;
@@ -1263,6 +1264,7 @@
       emptyCard.hidden = false;
       fortuneCard.hidden = true;
       saveCardButton.disabled = true;
+      if (luckNext) luckNext.disabled = true;
       saveNote.textContent = DEFAULT_SAVE_NOTE;
     }
 
@@ -1408,6 +1410,7 @@
       fortuneCard.style.animation = "";
 
       saveCardButton.disabled = false;
+      if (luckNext) luckNext.disabled = false;
       saveNote.textContent =
         "Your card is ready to keep. Save it as an image below. ♡";
 

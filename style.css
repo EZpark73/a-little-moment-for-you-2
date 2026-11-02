@@ -2262,3 +2262,54 @@ body::after {
     margin-right: auto;
   }
 }
+
+/* ========================================
+   Round 4 tweaks (mobile)
+   ======================================== */
+@media (max-width: 600px) {
+  /* Page 1: whole group a little lower */
+  #page-letter {
+    padding-top: 22px;
+    padding-bottom: 4dvh;
+  }
+
+  .envelope-button.open .envelope {
+    margin-bottom: 16px;
+  }
+
+  .envelope-button.open .envelope-hint {
+    margin-top: 8px;
+  }
+
+  .hero .letter-controls {
+    margin-top: 4px;
+  }
+
+  /* Page 2: heading, card and buttons a little higher */
+  #page-luck {
+    padding-bottom: 6dvh;
+  }
+
+  #page-luck .page-bottom-nav {
+    margin-top: 22px;
+  }
+
+  /* Page 3: heading + form up, bottom buttons stay put */
+  #page-wish > :not(.page-bottom-nav) {
+    position: relative;
+    top: -16px;
+  }
+
+  /* Pages 2 and 4: Back / Next as plain text */
+  #page-luck .page-bottom-nav .text-nav,
+  #page-luck .page-bottom-nav .next-button,
+  #page-wishes .page-bottom-nav .text-nav,
+  #page-wishes .page-bottom-nav .next-button {
+    border: 0;
+    background: none;
+    box-shadow: none;
+    border-radius: 0;
+    color: #f3d9a4;
+    font-weight: 600;
+  }
+}
