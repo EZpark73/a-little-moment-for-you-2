@@ -1266,6 +1266,8 @@
       saveNote.textContent = DEFAULT_SAVE_NOTE;
     }
 
+    if (name === "wishes") reshuffleWishes();
+
     if (name === "wish" && !submitting) {
       wishFeedback.textContent = DEFAULT_WISH_FEEDBACK;
     }
@@ -1615,54 +1617,82 @@
       ctx.shadowOffsetY = 0;
     };
 
-    shadowOn();
-    ctx.textBaseline = "alphabetic";
+    // Text: copy exactly what the on-screen card shows
+    // (position, font size, line breaks), so the saved image matches the web.
+    const cardRect = fortuneCard.getBoundingClientRect();
+    const sx = width / cardRect.width;
+    const sy = height / cardRect.height;
+    const k = width / fortuneCard.offsetWidth;
+
+    const domLines = (el) => {
+      const out = [];
+      let cur = null;
+      const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+      let node;
+      while ((node = walker.nextNode())) {
+        const t = node.textContent;
+        for (let i = 0; i < t.length; i++) {
+          const range = document.createRange();
+          range.setStart(node, i);
+          range.setEnd(node, i + 1);
+          const rects = range.getClientRects();
+          if (!rects.length) continue;
+          const r = rects[0];
+          if (r.width === 0 && cur) {
+            cur.text += t[i];
+            continue;
+          }
+          if (!cur || Math.abs(r.top - cur.top) > Math.max(cur.h, 1) * 0.5) {
+            cur = {
+              text: "",
+              top: r.top,
+              bottom: r.bottom,
+              h: r.height,
+              left: r.left,
+              right: r.right,
+            };
+            out.push(cur);
+          }
+          cur.text += t[i];
+          cur.left = Math.min(cur.left, r.left);
+          cur.right = Math.max(cur.right, r.right);
+        }
+      }
+      return out;
+    };
+
     ctx.fillStyle = "#ffffff";
+    ctx.textBaseline = "middle";
+    shadowOn();
 
-    ctx.textAlign = "left";
-    ctx.font = `bold 18px ${SANS}`;
-    ctx.fillText("A LITTLE MOMENT", 48, 58);
+    fortuneCard
+      .querySelectorAll(
+        ".card-topline span, .card-moon, .card-label, h3, p, .card-source, .card-bottomline span",
+      )
+      .forEach((el) => {
+        if (el.hidden) return;
+        const cs = getComputedStyle(el);
+        if (cs.display === "none") return;
 
-    ctx.textAlign = "right";
-    ctx.font = `bold 16px ${SANS}`;
-    ctx.fillText(card.number, 652, 58);
+        ctx.font = `${cs.fontStyle} ${cs.fontWeight} ${parseFloat(cs.fontSize) * k}px ${cs.fontFamily}`;
+        if ("letterSpacing" in ctx) {
+          ctx.letterSpacing =
+            cs.letterSpacing === "normal"
+              ? "0px"
+              : `${parseFloat(cs.letterSpacing) * k}px`;
+        }
 
-    ctx.textAlign = "center";
-    ctx.font = `100px ${SERIF}`;
-    ctx.fillText(card.icon, 350, 330);
+        domLines(el).forEach((line) => {
+          let text = line.text.trim();
+          if (!text) return;
+          if (cs.textTransform === "uppercase") text = text.toUpperCase();
+          const cx = ((line.left + line.right) / 2 - cardRect.left) * sx;
+          const cy = ((line.top + line.bottom) / 2 - cardRect.top) * sy;
+          fillCentered(ctx, text, cx, cy);
+        });
+      });
 
-    ctx.font = `bold 19px ${SANS}`;
-    ctx.fillText(card.label, 350, 405);
-
-    // Title: shrink so the widest line stays within 580px
-    const titleLines = card.title.split("\n");
-    let titleSize = 48;
-    let widest = 0;
-    do {
-      ctx.font = `bold ${titleSize}px ${SERIF}`;
-      widest = Math.max(...titleLines.map((l) => ctx.measureText(l).width));
-      if (widest > 580) titleSize -= 2;
-    } while (widest > 580 && titleSize > 26);
-
-    const titleLH = titleSize * 1.18;
-    titleLines.forEach((line, i) => {
-      fillCentered(ctx, line, 350, 485 + i * titleLH);
-    });
-
-    // Message: shrink until it fits in at most 4 lines
-    let msgSize = 22;
-    let msgLines;
-    do {
-      ctx.font = `600 ${msgSize}px ${THAI}`;
-      msgLines = getLines(ctx, card.message, 520);
-      if (msgLines.length > 4) msgSize -= 1;
-    } while (msgLines.length > 4 && msgSize > 15);
-
-    const msgLH = msgSize * 1.7;
-    const msgY = 485 + titleLH * (titleLines.length - 1) + 80;
-    msgLines.forEach((line, i) => {
-      fillCentered(ctx, line, 350, msgY + i * msgLH);
-    });
+    if ("letterSpacing" in ctx) ctx.letterSpacing = "0px";
     shadowOff();
 
     ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
@@ -1671,16 +1701,6 @@
     ctx.moveTo(48, 890);
     ctx.lineTo(652, 890);
     ctx.stroke();
-
-    shadowOn();
-    ctx.textAlign = "left";
-    ctx.font = `bold 17px ${SANS}`;
-    ctx.fillText("DEW ✦ TEE", 48, 927);
-
-    ctx.textAlign = "right";
-    ctx.font = `28px ${SANS}`;
-    ctx.fillText("♡", 652, 930);
-    shadowOff();
 
     return canvas;
   }
@@ -1817,43 +1837,34 @@
   }
 
   /* ---------- Wishes wall ---------- */
-  function renderWallMessage(text, withButton) {
-    wishesWall.replaceChildren();
+  const WISHES_PER_PAGE = 4;
+  let wishDocs = new Map();
+  let wishOrder = [];
+  let wishPage = 1;
 
-    const box = document.createElement("div");
-    box.className = "wall-empty";
-
-    const star = document.createElement("span");
-    star.className = "wall-empty-star";
-    star.textContent = "✧";
-
-    const p = document.createElement("p");
-    p.textContent = text;
-
-    box.append(star, p);
-
-    if (withButton) {
-      const button = document.createElement("button");
-      button.className = "secondary-button";
-      button.type = "button";
-      button.textContent = "Be the first to send some love";
-      button.addEventListener("click", () => showPage("wish"));
-      box.appendChild(button);
+  function reshuffleWishes() {
+    for (let i = wishOrder.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [wishOrder[i], wishOrder[j]] = [wishOrder[j], wishOrder[i]];
     }
-
-    wishesWall.appendChild(box);
+    wishPage = 1;
+    renderWishPage();
   }
 
-  function renderWishes(snapshot) {
-    if (snapshot.empty) {
-      renderWallMessage("The sky is waiting for its first little wish.", true);
-      return;
-    }
+  function renderWishPage() {
+    if (!wishOrder.length) return;
 
+    const total = Math.max(1, Math.ceil(wishOrder.length / WISHES_PER_PAGE));
+    wishPage = Math.min(Math.max(wishPage, 1), total);
+
+    const start = (wishPage - 1) * WISHES_PER_PAGE;
+    const ids = wishOrder.slice(start, start + WISHES_PER_PAGE);
     const fragment = document.createDocumentFragment();
 
-    snapshot.forEach((doc) => {
-      const wish = doc.data();
+    ids.forEach((id) => {
+      const wish = wishDocs.get(id);
+      if (!wish) return;
+
       const card = document.createElement("article");
       card.className = "wish-card";
 
@@ -1878,6 +1889,31 @@
     });
 
     wishesWall.replaceChildren(fragment);
+    renderPagination(total);
+  }
+
+  function renderWishes(snapshot) {
+    if (snapshot.empty) {
+      wishDocs = new Map();
+      wishOrder = [];
+      renderWallMessage("The sky is waiting for its first little wish.", true);
+      return;
+    }
+
+    const next = new Map();
+    snapshot.forEach((doc) => next.set(doc.id, doc.data()));
+    wishDocs = next;
+
+    wishOrder = wishOrder.filter((id) => next.has(id));
+    const known = new Set(wishOrder);
+    next.forEach((_, id) => {
+      if (!known.has(id)) {
+        const pos = Math.floor(Math.random() * (wishOrder.length + 1));
+        wishOrder.splice(pos, 0, id);
+      }
+    });
+
+    renderWishPage();
   }
 
   if (wishesWall) {
