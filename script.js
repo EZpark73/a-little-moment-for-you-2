@@ -134,7 +134,7 @@
       anime: "Demon Slayer",
       character: "Zenitsu Agatsuma",
       color: C[0],
-      image: "images/1.JPG",
+      image: "images/7.JPG",
     },
     {
       number: "NO. 08",
@@ -145,7 +145,7 @@
       anime: "Demon Slayer",
       character: "Nezuko Kamado",
       color: C[1],
-      image: "images/2.JPG",
+      image: "images/8.JPG",
     },
     {
       number: "NO. 09",
@@ -156,7 +156,7 @@
       anime: "Haikyu!!",
       character: "Shoyo Hinata",
       color: C[2],
-      image: "images/3.JPG",
+      image: "images/9.JPG",
     },
     {
       number: "NO. 10",
@@ -167,7 +167,7 @@
       anime: "Haikyu!!",
       character: "Kei Tsukishima",
       color: C[3],
-      image: "images/4.JPG",
+      image: "images/10.JPG",
     },
     {
       number: "NO. 11",
@@ -178,7 +178,7 @@
       anime: "Slam Dunk",
       character: "Hanamichi Sakuragi",
       color: C[4],
-      image: "images/5.JPG",
+      image: "images/11.JPG",
     },
     {
       number: "NO. 12",
@@ -189,7 +189,7 @@
       anime: "Fullmetal Alchemist: Brotherhood",
       character: "Edward Elric",
       color: C[5],
-      image: "images/6.JPG",
+      image: "images/12.JPG",
     },
     {
       number: "NO. 13",
@@ -200,7 +200,7 @@
       anime: "Fullmetal Alchemist: Brotherhood",
       character: "Alphonse Elric",
       color: C[0],
-      image: "images/1.JPG",
+      image: "images/13.JPG",
     },
     {
       number: "NO. 14",
@@ -211,7 +211,7 @@
       anime: "Fairy Tail",
       character: "Erza Scarlet",
       color: C[1],
-      image: "images/2.JPG",
+      image: "images/14.JPG",
     },
     {
       number: "NO. 15",
@@ -222,7 +222,7 @@
       anime: "Hunter × Hunter",
       character: "Gon Freecss",
       color: C[2],
-      image: "images/3.JPG",
+      image: "images/15.JPG",
     },
     {
       number: "NO. 16",
@@ -233,7 +233,7 @@
       anime: "Hunter × Hunter",
       character: "Killua Zoldyck",
       color: C[3],
-      image: "images/4.JPG",
+      image: "images/16.JPG",
     },
     {
       number: "NO. 17",
@@ -244,7 +244,7 @@
       anime: "Frieren: Beyond Journey's End",
       character: "Frieren",
       color: C[4],
-      image: "images/5.JPG",
+      image: "images/17.JPG",
     },
     {
       number: "NO. 18",
@@ -255,7 +255,7 @@
       anime: "Your Name.",
       character: "Mitsuha Miyamizu",
       color: C[5],
-      image: "images/6.JPG",
+      image: "images/18.JPG",
     },
     {
       number: "NO. 19",
@@ -266,7 +266,7 @@
       anime: "Kiki's Delivery Service",
       character: "Kiki",
       color: C[0],
-      image: "images/1.JPG",
+      image: "images/19.JPG",
     },
     {
       number: "NO. 20",
@@ -277,7 +277,7 @@
       anime: "Samurai Champloo",
       character: "Mugen",
       color: C[1],
-      image: "images/2.JPG",
+      image: "images/20.JPG",
     },
     {
       number: "NO. 21",
@@ -288,7 +288,7 @@
       anime: "Assassination Classroom",
       character: "Koro-sensei",
       color: C[2],
-      image: "images/3.JPG",
+      image: "images/21.JPG",
     },
     {
       number: "NO. 22",
@@ -299,7 +299,7 @@
       anime: "Gurren Lagann",
       character: "Kamina",
       color: C[3],
-      image: "images/4.JPG",
+      image: "images/22.JPG",
     },
     {
       number: "NO. 23",
@@ -310,7 +310,7 @@
       anime: "Mob Psycho 100",
       character: "Shigeo Kageyama",
       color: C[4],
-      image: "images/5.JPG",
+      image: "images/23.JPG",
     },
     {
       number: "NO. 24",
@@ -321,7 +321,7 @@
       anime: "Blue Period",
       character: "Yatora Yaguchi",
       color: C[5],
-      image: "images/6.JPG",
+      image: "images/24.JPG",
     },
     {
       number: "NO. 25",
@@ -332,7 +332,7 @@
       anime: "Mashle",
       character: "Mash Burnedead",
       color: C[0],
-      image: "images/1.JPG",
+      image: "images/25.JPG",
     },
     {
       number: "NO. 26",
@@ -343,7 +343,7 @@
       anime: "Kaiju No. 8",
       character: "Kafka Hibino",
       color: C[1],
-      image: "images/2.JPG",
+      image: "images/26.JPG",
     },
     {
       number: "NO. 27",
@@ -355,7 +355,7 @@
       anime: "Re:Zero",
       character: "Rem",
       color: C[2],
-      image: "images/3.JPG",
+      image: "images/27.JPG",
     },
     {
       number: "NO. 28",
@@ -366,7 +366,7 @@
       anime: "Gachiakuta",
       character: "Rudo",
       color: C[3],
-      image: "images/4.JPG",
+      image: "images/28.JPG",
     },
     {
       number: "NO. 29",
@@ -377,7 +377,7 @@
       anime: "Gintama",
       character: "Gintoki Sakata",
       color: C[4],
-      image: "images/5.JPG",
+      image: "images/29.JPG",
     },
     {
       number: "NO. 30",
@@ -388,7 +388,7 @@
       anime: "The Disastrous Life of Saiki K.",
       character: "Kusuo Saiki",
       color: C[5],
-      image: "images/6.JPG",
+      image: "images/30.JPG",
     },
     {
       number: "NO. 31",
@@ -399,7 +399,7 @@
       anime: "Bungo Stray Dogs",
       character: "Atsushi Nakajima",
       color: C[0],
-      image: "images/1.JPG",
+      image: "images/31.JPG",
     },
     {
       number: "NO. 32",
@@ -410,7 +410,7 @@
       anime: "Chainsaw Man",
       character: "Denji",
       color: C[1],
-      image: "images/2.JPG",
+      image: "images/32.JPG",
     },
     {
       number: "NO. 33",
@@ -421,7 +421,7 @@
       anime: "Pokémon",
       character: "Ash Ketchum",
       color: C[2],
-      image: "images/3.JPG",
+      image: "images/33.JPG",
     },
     {
       number: "NO. 34",
@@ -432,7 +432,7 @@
       anime: "Tougen Anki",
       character: "Shiki Ichinose",
       color: C[3],
-      image: "images/4.JPG",
+      image: "images/34.JPG",
     },
     {
       number: "NO. 35",
@@ -443,7 +443,7 @@
       anime: "Dandelion",
       character: "Main Character",
       color: C[4],
-      image: "images/5.JPG",
+      image: "images/35.JPG",
     },
     {
       number: "NO. 36",
@@ -454,7 +454,7 @@
       anime: "Black Clover",
       character: "Asta",
       color: C[5],
-      image: "images/6.JPG",
+      image: "images/36.JPG",
     },
     {
       number: "NO. 37",
@@ -465,7 +465,7 @@
       anime: "My Hero Academia",
       character: "Shoto Todoroki",
       color: C[0],
-      image: "images/1.JPG",
+      image: "images/37.JPG",
     },
     {
       number: "NO. 38",
@@ -476,7 +476,7 @@
       anime: "Naruto",
       character: "Rock Lee",
       color: C[1],
-      image: "images/2.JPG",
+      image: "images/38.JPG",
     },
     {
       number: "NO. 39",
@@ -487,7 +487,7 @@
       anime: "Fairy Tail",
       character: "Lucy Heartfilia",
       color: C[2],
-      image: "images/3.JPG",
+      image: "images/39.JPG",
     },
     {
       number: "NO. 40",
@@ -498,7 +498,7 @@
       anime: "Hunter × Hunter",
       character: "Kurapika",
       color: C[3],
-      image: "images/4.JPG",
+      image: "images/40.JPG",
     },
     {
       number: "NO. 41",
@@ -509,7 +509,7 @@
       anime: "Frieren: Beyond Journey's End",
       character: "Himmel",
       color: C[4],
-      image: "images/5.JPG",
+      image: "images/41.JPG",
     },
     {
       number: "NO. 42",
@@ -520,7 +520,7 @@
       anime: "Spirited Away",
       character: "Haku",
       color: C[5],
-      image: "images/6.JPG",
+      image: "images/42.JPG",
     },
     {
       number: "NO. 43",
@@ -532,7 +532,7 @@
       anime: "Steins;Gate",
       character: "Rintaro Okabe",
       color: C[0],
-      image: "images/1.JPG",
+      image: "images/43.JPG",
     },
     {
       number: "NO. 44",
@@ -543,7 +543,7 @@
       anime: "The Apothecary Diaries",
       character: "Jinshi",
       color: C[1],
-      image: "images/2.JPG",
+      image: "images/44.JPG",
     },
     {
       number: "NO. 45",
@@ -554,7 +554,7 @@
       anime: "Solo Leveling",
       character: "Sung Jinwoo",
       color: C[2],
-      image: "images/3.JPG",
+      image: "images/45.JPG",
     },
     {
       number: "NO. 46",
@@ -565,7 +565,7 @@
       anime: "Black Clover",
       character: "Yuno",
       color: C[3],
-      image: "images/4.JPG",
+      image: "images/46.JPG",
     },
     {
       number: "NO. 47",
@@ -576,7 +576,7 @@
       anime: "Pokémon",
       character: "Pikachu",
       color: C[4],
-      image: "images/5.JPG",
+      image: "images/47.JPG",
     },
     {
       number: "NO. 48",
@@ -587,7 +587,7 @@
       anime: "Naruto",
       character: "Itachi Uchiha",
       color: C[5],
-      image: "images/6.JPG",
+      image: "images/48.JPG",
     },
     {
       number: "NO. 49",
@@ -598,7 +598,7 @@
       anime: "Kuroko's Basketball",
       character: "Shintaro Midorima",
       color: C[0],
-      image: "images/1.JPG",
+      image: "images/49.JPG",
     },
     {
       number: "NO. 50",
@@ -609,7 +609,7 @@
       anime: "Hunter × Hunter",
       character: "Killua Zoldyck",
       color: C[1],
-      image: "images/2.JPG",
+      image: "images/50.JPG",
     },
     {
       number: "NO. 51",
@@ -621,7 +621,7 @@
       anime: "The Tale of the Princess Kaguya",
       character: "Princess Kaguya",
       color: C[2],
-      image: "images/3.JPG",
+      image: "images/51.JPG",
     },
     {
       number: "NO. 52",
@@ -632,7 +632,7 @@
       anime: "Barakamon",
       character: "Naru Kotoishi",
       color: C[3],
-      image: "images/4.JPG",
+      image: "images/52.JPG",
     },
     {
       number: "NO. 53",
@@ -643,7 +643,7 @@
       anime: "The Wind Rises",
       character: "Jiro Horikoshi",
       color: C[4],
-      image: "images/5.JPG",
+      image: "images/53.JPG",
     },
     {
       number: "NO. 54",
@@ -654,7 +654,7 @@
       anime: "Run with the Wind",
       character: "Kakeru Kurahara",
       color: C[5],
-      image: "images/6.JPG",
+      image: "images/54.JPG",
     },
     {
       number: "NO. 55",
@@ -666,7 +666,7 @@
       anime: "Blue Lock",
       character: "Meguru Bachira",
       color: C[0],
-      image: "images/1.JPG",
+      image: "images/55.JPG",
     },
     {
       number: "NO. 56",
@@ -678,7 +678,7 @@
       anime: "Attack on Titan",
       character: "Armin Arlert",
       color: C[1],
-      image: "images/2.JPG",
+      image: "images/56.JPG",
     },
     {
       number: "NO. 57",
@@ -689,7 +689,7 @@
       anime: "86",
       character: "Vladilena Milizé",
       color: C[2],
-      image: "images/3.JPG",
+      image: "images/57.JPG",
     },
     {
       number: "NO. 58",
@@ -701,7 +701,7 @@
       anime: "Reborn!",
       character: "Tsunayoshi Sawada",
       color: C[3],
-      image: "images/4.JPG",
+      image: "images/58.JPG",
     },
     {
       number: "NO. 59",
@@ -713,7 +713,7 @@
       anime: "Psycho-Pass",
       character: "Akane Tsunemori",
       color: C[4],
-      image: "images/5.JPG",
+      image: "images/59.JPG",
     },
     {
       number: "NO. 60",
@@ -725,7 +725,7 @@
       anime: "Dragon Ball",
       character: "Goku",
       color: C[5],
-      image: "images/6.JPG",
+      image: "images/60.JPG",
     },
     {
       number: "NO. 61",
@@ -736,7 +736,7 @@
       anime: "Ranking of Kings",
       character: "Bojji",
       color: C[0],
-      image: "images/1.JPG",
+      image: "images/61.JPG",
     },
     {
       number: "NO. 62",
@@ -747,7 +747,7 @@
       anime: "The Promised Neverland",
       character: "Emma",
       color: C[1],
-      image: "images/2.JPG",
+      image: "images/62.JPG",
     },
     {
       number: "NO. 63",
@@ -759,7 +759,7 @@
       anime: "Violet Evergarden",
       character: "Violet Evergarden",
       color: C[2],
-      image: "images/3.JPG",
+      image: "images/63.JPG",
     },
     {
       number: "NO. 64",
@@ -771,7 +771,7 @@
       anime: "A Place Further than the Universe",
       character: "Mari Tamaki",
       color: C[3],
-      image: "images/4.JPG",
+      image: "images/64.JPG",
     },
     {
       number: "NO. 65",
@@ -783,7 +783,7 @@
       anime: "Chihayafuru",
       character: "Chihaya Ayase",
       color: C[4],
-      image: "images/5.JPG",
+      image: "images/65.JPG",
     },
     {
       number: "NO. 66",
@@ -795,7 +795,7 @@
       anime: "Skip and Loafer",
       character: "Mitsumi Iwakura",
       color: C[5],
-      image: "images/6.JPG",
+      image: "images/66.JPG",
     },
     {
       number: "NO. 67",
@@ -807,7 +807,7 @@
       anime: "The Ancient Magus' Bride",
       character: "Chise Hatori",
       color: C[0],
-      image: "images/1.JPG",
+      image: "images/67.JPG",
     },
     {
       number: "NO. 68",
@@ -819,7 +819,7 @@
       anime: "Silver Spoon",
       character: "Yuugo Hachiken",
       color: C[1],
-      image: "images/2.JPG",
+      image: "images/68.JPG",
     },
     {
       number: "NO. 69",
@@ -831,7 +831,7 @@
       anime: "Little Witch Academia",
       character: "Akko Kagari",
       color: C[2],
-      image: "images/3.JPG",
+      image: "images/69.JPG",
     },
     {
       number: "NO. 70",
@@ -842,7 +842,7 @@
       anime: "Yuri!!! on Ice",
       character: "Yuri Katsuki",
       color: C[3],
-      image: "images/4.JPG",
+      image: "images/70.JPG",
     },
     {
       number: "NO. 71",
@@ -854,7 +854,7 @@
       anime: "Free!",
       character: "Haruka Nanase",
       color: C[4],
-      image: "images/5.JPG",
+      image: "images/71.JPG",
     },
     {
       number: "NO. 72",
@@ -866,7 +866,7 @@
       anime: "86",
       character: "Shinei Nouzen",
       color: C[5],
-      image: "images/6.JPG",
+      image: "images/72.JPG",
     },
     {
       number: "NO. 73",
@@ -878,7 +878,7 @@
       anime: "Inuyasha",
       character: "Kagome Higurashi",
       color: C[0],
-      image: "images/1.JPG",
+      image: "images/73.JPG",
     },
     {
       number: "NO. 74",
@@ -890,7 +890,7 @@
       anime: "Sailor Moon",
       character: "Usagi Tsukino",
       color: C[1],
-      image: "images/2.JPG",
+      image: "images/74.JPG",
     },
     {
       number: "NO. 75",
@@ -901,7 +901,7 @@
       anime: "Cardcaptor Sakura",
       character: "Sakura Kinomoto",
       color: C[2],
-      image: "images/3.JPG",
+      image: "images/75.JPG",
     },
     {
       number: "NO. 76",
@@ -912,7 +912,7 @@
       anime: "Yona of the Dawn",
       character: "Yona",
       color: C[3],
-      image: "images/4.JPG",
+      image: "images/76.JPG",
     },
     {
       number: "NO. 77",
@@ -924,7 +924,7 @@
       anime: "Natsume's Book of Friends",
       character: "Madara (Nyanko-sensei)",
       color: C[4],
-      image: "images/5.JPG",
+      image: "images/77.JPG",
     },
     {
       number: "NO. 78",
@@ -936,7 +936,7 @@
       anime: "Cells at Work!",
       character: "Red Blood Cell",
       color: C[5],
-      image: "images/6.JPG",
+      image: "images/78.JPG",
     },
     {
       number: "NO. 79",
@@ -947,7 +947,7 @@
       anime: "Shirobako",
       character: "Aoi Miyamori",
       color: C[0],
-      image: "images/1.JPG",
+      image: "images/79.JPG",
     },
     {
       number: "NO. 80",
@@ -958,7 +958,7 @@
       anime: "One Piece",
       character: "Monkey D. Luffy",
       color: C[1],
-      image: "images/2.JPG",
+      image: "images/80.JPG",
     },
     {
       number: "NO. 81",
@@ -969,7 +969,7 @@
       anime: "Blue Lock",
       character: "Yoichi Isagi",
       color: C[2],
-      image: "images/3.JPG",
+      image: "images/81.JPG",
     },
     {
       number: "NO. 82",
@@ -981,7 +981,7 @@
       anime: "Vinland Saga",
       character: "Thorfinn",
       color: C[3],
-      image: "images/4.JPG",
+      image: "images/82.JPG",
     },
     {
       number: "NO. 83",
@@ -992,7 +992,7 @@
       anime: "Bocchi the Rock!",
       character: "Hitori Gotoh",
       color: C[4],
-      image: "images/5.JPG",
+      image: "images/83.JPG",
     },
     {
       number: "NO. 84",
@@ -1003,7 +1003,7 @@
       anime: "JoJo's Bizarre Adventure",
       character: "Jonathan Joestar",
       color: C[5],
-      image: "images/6.JPG",
+      image: "images/84.JPG",
     },
     {
       number: "NO. 85",
@@ -1014,7 +1014,7 @@
       anime: "Neon Genesis Evangelion",
       character: "Shinji Ikari",
       color: C[0],
-      image: "images/1.JPG",
+      image: "images/85.JPG",
     },
     {
       number: "NO. 86",
@@ -1026,7 +1026,7 @@
       anime: "K-On!",
       character: "Mio Akiyama",
       color: C[1],
-      image: "images/2.JPG",
+      image: "images/86.JPG",
     },
     {
       number: "NO. 87",
@@ -1038,7 +1038,7 @@
       anime: "The Seven Deadly Sins",
       character: "Meliodas",
       color: C[2],
-      image: "images/3.JPG",
+      image: "images/87.JPG",
     },
     {
       number: "NO. 88",
@@ -1050,7 +1050,7 @@
       anime: "Neon Genesis Evangelion",
       character: "Misato Katsuragi",
       color: C[3],
-      image: "images/4.JPG",
+      image: "images/88.JPG",
     },
   ];
 
